@@ -1,0 +1,2121 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>말풍선 테마 스튜디오</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Space+Grotesk:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: 1 고르기 (tags → recommendations → library → base/rule/palette) │ preview = the only editor (click a part) │ 2 마무리 (badge, edits, export, saved). White frosted glass on a near-neutral ground. */
+:root{
+  color-scheme: light;
+  --paper:#F6F7F9;
+  --ink:#1B2130;
+  --ink-2:#4A5366;
+  --ink-3:#646C7E;
+  --line:rgba(27,33,48,.09);
+  --glass:rgba(255,255,255,.62);
+  --glass-strong:rgba(255,255,255,.82);
+  --glass-edge:rgba(255,255,255,.92);
+  --shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 10px 40px -12px rgba(30,40,70,.16), 0 2px 6px rgba(30,40,70,.05);
+  --ok:#1F7A52; --ok-bg:rgba(31,122,82,.1);
+  --bad:#B53A33; --bad-bg:rgba(181,58,51,.1);
+  --warn:#8A5A0A; --warn-bg:rgba(196,128,20,.12);
+  --f-body:"IBM Plex Sans KR", system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --f-disp:"Space Grotesk", "IBM Plex Sans KR", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --blob1:#8BEABB; --blob3:#1F6F5C;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(40vw 40vw at 2% 6%, color-mix(in srgb, var(--blob1) 14%, transparent), transparent 70%),radial-gradient(40vw 36vw at 100% 100%, color-mix(in srgb, var(--blob3) 8%, transparent), transparent 70%)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--glass-strong)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.glass{background:var(--glass);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);border:1px solid var(--glass-edge);box-shadow:var(--shadow)}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;padding-block:12px;padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));background:var(--glass-strong);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1440px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-mark{width:30px;height:30px}
+.brand h1{font-family:var(--f-disp);font-size:17px;font-weight:600;margin:0;letter-spacing:-.01em}
+.brand small{display:block;font-size:11.5px;color:var(--ink-3);font-weight:400}
+.steps{margin-left:auto;display:flex;gap:6px;font-size:12px;color:var(--ink-2);flex-wrap:wrap}
+.steps span{padding:4px 10px;border-radius:20px;background:rgba(27,33,48,.05)}
+
+.btn{border:1px solid var(--line);background:rgba(255,255,255,.78);border-radius:10px;padding:7px 12px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:background .15s, transform .1s}
+.btn:hover{background:#fff}
+.btn:active{transform:translateY(1px)}
+.btn.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.dark:hover{background:#2a3246}
+.btn.sm{padding:4px 9px;font-size:12px;border-radius:8px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+.wrap{max-width:1440px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));display:grid;grid-template-columns:minmax(310px,380px) minmax(340px,1fr) minmax(290px,340px);gap:20px;align-items:start}
+.panel{border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:18px;min-width:0}
+.stage{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0}
+.sec{display:flex;flex-direction:column;gap:10px}
+.sec + .sec{padding-top:16px;border-top:1px solid var(--line)}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.sec-h h2{margin:0;font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--ink-2);font-family:var(--f-disp)}
+.hint{font-size:11.5px;color:var(--ink-3)}
+.panel-title{display:flex;align-items:center;gap:8px;font-family:var(--f-disp);font-size:15px;font-weight:600}
+.step{width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-size:11.5px;display:grid;place-items:center;font-family:var(--f-disp);flex:none}
+.note{font-size:11.5px;color:var(--ink-3);line-height:1.5;margin:0}
+.seg{display:flex;background:rgba(27,33,48,.05);border-radius:10px;padding:3px;gap:2px}
+.seg button{flex:1;border:0;background:transparent;border-radius:8px;padding:6px 8px;font-size:12.5px;color:var(--ink-2);font-weight:500;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(20,30,50,.12)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:20px;padding:4px 10px;font-size:12.5px;color:var(--ink-2)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.swatch-in{position:relative;width:40px;height:40px;border-radius:11px;overflow:hidden;flex:none;border:1px solid var(--line)}
+.swatch-in input{position:absolute;inset:-8px;width:calc(100% + 16px);height:calc(100% + 16px);border:0;padding:0;cursor:pointer;opacity:0}
+
+/* tags */
+.tagrow{display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:start}
+.tagrow > span{font-size:11.5px;font-weight:600;color:var(--ink-3);padding-top:5px}
+.rec-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.basefix{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-2);background:rgba(27,33,48,.05);border-radius:20px;padding:3px 4px 3px 8px}
+.basefix i{width:12px;height:12px;border-radius:4px;display:inline-block}
+.basefix button{border:0;background:transparent;width:18px;height:18px;border-radius:50%;color:var(--ink-3)}
+.recs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rec{border:1px solid var(--line);background:rgba(255,255,255,.62);border-radius:13px;padding:6px;display:flex;flex-direction:column;gap:5px;min-width:0}
+.rec[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink);background:#fff}
+.rec .apply{border:0;background:transparent;padding:0;display:flex;flex-direction:column;gap:5px;text-align:left}
+.mini{border-radius:9px;height:96px;display:flex;flex-direction:column;overflow:hidden;width:100%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.mini i,.mini b{display:block;font-style:normal}
+.mini .mh{height:15px;display:flex;align-items:center;padding:0 6px;font-size:8.5px;font-weight:700;letter-spacing:-.01em;flex:none}
+.mini .mb{flex:1;display:flex;flex-direction:column;gap:4px;padding:5px 6px;min-height:0}
+.mini .bub{border-radius:7px;padding:4px 5px;display:flex;flex-direction:column;gap:2.5px}
+.mini .bub b{height:3px;border-radius:2px;background:currentColor;opacity:.8}
+.mini .mr{width:66%}.mini .mr b:last-child{width:60%}
+.mini .ms{width:56%;align-self:flex-end}
+.mini .mi{height:18px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:4px;padding:0 5px}
+.mini .mi::before{content:"";flex:1;height:8px;border-radius:5px;background:currentColor;opacity:.14}
+.mini .mbtn{font-size:8px;font-weight:700;border-radius:6px;padding:2px 6px;line-height:1.25}
+.rec .rt{font-size:11.5px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rec .rl{font-size:10.5px;line-height:1.35;color:var(--ink-2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.7em}
+.rec .rbadge{display:flex;gap:3px;flex-wrap:wrap}
+.rec .rbadge em{font-style:normal;font-size:9.5px;font-weight:600;border-radius:5px;padding:1px 5px;background:rgba(27,33,48,.06);color:var(--ink-2)}
+.rec .rbadge em.aa{background:var(--ok-bg);color:var(--ok)}
+.rec .rbadge em.md{background:var(--ink);color:#fff}
+.rec .more{border:0;background:rgba(27,33,48,.05);border-radius:7px;font-size:11px;padding:3px 4px;color:var(--ink-2)}
+.rec .more:hover{background:rgba(27,33,48,.1)}
+
+/* library */
+.lib-bar{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.lib-bar .seg{flex:none}
+.lib-bar .seg button{padding:4px 8px;font-size:11.5px}
+.curated{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.combo{border:1px solid var(--line);background:rgba(255,255,255,.62);border-radius:12px;padding:6px;display:flex;flex-direction:column;gap:5px;text-align:left;min-width:0}
+.combo:hover{background:#fff}
+.combo[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink);background:#fff}
+.combo .bars{display:flex;height:22px;border-radius:7px;overflow:hidden}
+.combo b{font-size:12px;font-weight:600;padding:0 2px}
+.combo small{font-size:10.5px;color:var(--ink-3);padding:0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lib-more{align-self:center}
+
+.base-row{display:flex;gap:8px;align-items:center}
+.base-row.big .swatch-in{width:52px;height:52px;border-radius:14px}
+.base-row.big .hex{font-size:17px;font-weight:600;padding:12px 12px;flex:1;min-width:0}
+.base-row.big .btn{align-self:stretch}
+.nobase{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11.5px;color:var(--ink-3)}
+.nobase > span{margin-right:2px}
+.nobase .btn{cursor:pointer}
+.chip[aria-disabled="true"]{opacity:.35;cursor:not-allowed}
+.lib-col{flex-wrap:wrap}
+.arr-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.arr-btn{gap:6px}
+.arr-btn svg{width:15px;height:15px}
+.stage-tools .arr-btn{width:100%;justify-content:center;padding:9px 12px}
+.sw .tag.role{background:rgba(255,255,255,.92);color:#1B2130}
+.lib-col button{padding:4px 9px;font-size:11.5px}
+.hex{flex:1;min-width:0;font-family:var(--f-mono);font-size:14px;border:1px solid var(--line);background:rgba(255,255,255,.8);border-radius:10px;padding:9px 12px;text-transform:uppercase}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.rule{border:1px solid var(--line);background:rgba(255,255,255,.62);border-radius:10px;padding:5px 6px 6px;display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink-2);text-align:left}
+.rule[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink);background:#fff;color:var(--ink)}
+.rule .bar{display:flex;height:10px;border-radius:4px;overflow:hidden}
+.rule .bar i{flex:1}
+.strip{display:grid;grid-template-columns:repeat(6,1fr);border-radius:14px;overflow:hidden;border:1px solid var(--line);min-height:120px}
+.sw{position:relative;display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:6px 2px 8px}
+.sw .lock{width:26px;height:26px;border-radius:8px;border:0;background:transparent;display:grid;place-items:center;opacity:.6}
+.sw:hover .lock,.sw .lock[aria-pressed="true"]{opacity:1}
+.sw .lock[aria-pressed="true"]{background:rgba(255,255,255,.88);color:#1B2130}
+.sw .lock svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sw .lab{display:flex;flex-direction:column;align-items:center;gap:3px;pointer-events:none}
+.sw .lab span{font-family:var(--f-mono);font-size:11px;letter-spacing:-.02em}
+.tag{font-size:10.5px;font-weight:600;padding:1px 5px;border-radius:6px;background:var(--ink);color:#fff;font-style:normal;white-space:nowrap}
+
+/* phone */
+.stage-top{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;width:min(360px,100%)}
+.stage-top .seg{background:var(--glass-strong);border:1px solid var(--line)}
+.stage-top .seg button{padding:4px 9px;font-size:12px}
+.phone{width:min(360px,100%);aspect-ratio:9/18.6;max-height:calc(100vh - 230px);min-height:520px;border-radius:46px;padding:10px;position:relative}
+.screen{position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:var(--c-bg);display:flex;flex-direction:column;transition:filter .3s, background .3s;cursor:pointer}
+.screen.gray{filter:grayscale(1)}
+.status{display:flex;justify-content:space-between;align-items:center;padding:12px 26px 4px;font-size:12.5px;font-weight:600;color:var(--c-headtext);font-family:var(--f-disp);background:var(--c-header)}
+.status .icons{display:flex;gap:5px;align-items:center}
+.status svg{height:11px;width:auto;fill:currentColor}
+.island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:92px;height:26px;border-radius:20px;background:#0B0D12}
+.chat-head{display:flex;align-items:center;gap:10px;padding:8px 14px 10px;color:var(--c-headtext);background:var(--c-header)}
+.chat-head svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chat-head .name{font-weight:600;font-size:14.5px;flex:1}
+.chat-head .name small{font-weight:400;opacity:.6;margin-left:4px;font-size:12px}
+.msgs{flex:1;overflow-y:auto;padding:6px 12px 12px;display:flex;flex-direction:column;gap:5px;scrollbar-width:none}
+.msgs::-webkit-scrollbar{display:none}
+.date{align-self:center;margin:6px 0 8px;font-size:11px;padding:3px 10px;border-radius:12px;background:color-mix(in srgb, var(--c-meta) 18%, transparent);color:var(--c-meta)}
+.row{display:flex;gap:8px;align-items:flex-start}
+.row.s{justify-content:flex-end}
+.row.grp{margin-top:5px}
+.avatar{width:36px;height:36px;flex:none;border-radius:40%;background:var(--c-avatar);display:grid;place-items:center;color:var(--c-avatartext);font-weight:600;font-size:14px}
+.av-spacer{width:36px;flex:none}
+.col{display:flex;flex-direction:column;gap:3px;min-width:0;max-width:72%}
+.row.s .col{align-items:flex-end}
+.sender{font-size:11.5px;color:var(--c-meta);margin-left:7px}
+.line{display:flex;align-items:flex-end;gap:5px;min-width:0}
+.row.s .line{flex-direction:row-reverse}
+.bub{position:relative;padding:8px 11px;font-size:14px;line-height:1.42;word-break:keep-all;overflow-wrap:anywhere;min-width:0}
+.row.r .bub{margin-left:6px;color:var(--c-recvtext)}
+.row.s .bub{margin-right:6px;color:var(--c-senttext)}
+.bub svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+.bub .tx{position:relative}
+.bub a{color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb, currentColor 50%, transparent);text-decoration-thickness:2px;text-underline-offset:2px}
+.meta{font-size:10px;color:var(--c-meta);white-space:nowrap;display:flex;flex-direction:column;line-height:1.25;flex:none}
+.row.s .meta{align-items:flex-end}
+.unread{color:var(--c-accent);font-weight:600;font-size:10.5px}
+.inputbar{display:flex;align-items:center;gap:8px;padding:8px 10px 18px;background:var(--c-header)}
+.inputbar .plus{width:30px;height:30px;border-radius:50%;border:0;background:transparent;color:var(--c-headtext);display:grid;place-items:center}
+.inputbar .plus svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round}
+.inputbar input{flex:1;min-width:0;border:1px solid rgba(0,0,0,.06);background:rgba(255,255,255,.92);border-radius:18px;padding:7px 12px;font-size:13px;color:#222;cursor:text}
+.inputbar input::placeholder{color:#7d838e}
+.send{width:32px;height:32px;border-radius:50%;border:0;background:var(--c-accent);background-image:var(--c-accentimg,none);display:grid;place-items:center;flex:none}
+.gsw{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.gsw button{width:26px;height:26px;border-radius:8px;border:1px solid rgba(27,33,48,.12);padding:0}
+.gsw button.auto{width:auto;padding:0 8px;font-size:11.5px;background:#fff;color:var(--ink-2)}
+.gsw button[aria-pressed="true"]{box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--ink)}
+.gsw .sep{width:1px;height:18px;background:var(--line);margin:0 2px}
+.gpreview{height:26px;border-radius:9px;border:1px solid rgba(27,33,48,.1)}
+.grecs{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-width:0}
+.gchip{width:34px;height:24px;border-radius:12px;border:1px solid rgba(27,33,48,.12);padding:0;flex:none}
+.gchip.none{width:auto;padding:0 10px;background:var(--glass-strong);font-size:12px;color:var(--ink-2)}
+.gchip[aria-pressed="true"]{box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--ink)}
+.gchip.mesh{border-radius:8px}
+.gpart{border:1px solid var(--line);background:var(--glass-strong);border-radius:9px;padding:4px 6px;font-size:12px;color:var(--ink-2);flex:none;max-width:96px}
+/* drawer: covers the right panel while a gradient is edited */
+.drawer{position:absolute;inset:0;z-index:15;border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:10px;overflow:auto;background:rgba(255,255,255,.97);border:1px solid var(--glass-edge);box-shadow:var(--shadow)}
+.dr-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.dr-h b{font-family:var(--f-disp);font-size:15px}
+.dcanvas{position:relative;width:100%;border-radius:14px;border:1px solid var(--line);touch-action:none;align-self:center}
+.dcanvas.k-bg{width:min(170px,60%);aspect-ratio:1/2}
+.dcanvas.k-sent,.dcanvas.k-recv{aspect-ratio:3/1}
+.dcanvas.k-accent{width:120px;aspect-ratio:1/1;border-radius:50%}
+.dpt{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);font-size:11px;font-weight:600;color:#fff;text-shadow:0 0 3px rgba(0,0,0,.6);cursor:grab;padding:0;background:var(--ink)}
+.dpt[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink),0 1px 4px rgba(0,0,0,.35)}
+.dpt:active{cursor:grabbing}
+.ditems{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.ditem{width:30px;height:30px;border-radius:50%;border:1px solid rgba(27,33,48,.15);font-size:11px;font-weight:600;color:#fff;text-shadow:0 0 3px rgba(0,0,0,.6);padding:0}
+.ditem.base{width:auto;border-radius:15px;padding:0 10px}
+.ditem[aria-pressed="true"]{box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--ink)}
+.dref{width:26px;height:26px;border-radius:8px;border:1px solid rgba(27,33,48,.12);padding:0}
+.dref[aria-pressed="true"]{box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--ink)}
+.dial-row{display:flex;align-items:center;gap:12px}
+.dial{width:64px;height:64px;border-radius:50%;border:1px solid var(--line);background:radial-gradient(circle,#fff 55%,rgba(27,33,48,.05) 56%);position:relative;cursor:grab;touch-action:none;flex:none}
+.dial i{position:absolute;left:50%;top:6px;bottom:50%;width:2px;margin-left:-1px;background:var(--ink);transform-origin:50% 100%;border-radius:2px}
+.dial i::after{content:"";position:absolute;top:-4px;left:-4px;width:10px;height:10px;border-radius:50%;background:var(--ink)}
+.dial:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.drow{display:flex;gap:6px;flex-wrap:wrap}
+.dread{font-size:12px;border-radius:10px;padding:8px 10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.dread.ok{background:var(--ok-bg);color:var(--ok)}
+.dread.warn{background:var(--warn-bg);color:var(--warn)}
+.figma{display:block}
+.figma > summary{list-style:none;cursor:pointer;width:100%}
+.figma > summary::-webkit-details-marker{display:none}
+.figma-pop{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding:10px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.7)}
+.figma-pop .note{flex-basis:100%}
+.send svg{width:16px;height:16px;fill:none;stroke:var(--c-sendicon);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.hl{position:absolute;pointer-events:none;border-radius:14px;box-shadow:0 0 0 2px var(--ink),0 0 0 4px rgba(255,255,255,.85);transition:all .08s;z-index:5}
+.hover-lab{position:absolute;z-index:25;pointer-events:none;background:var(--ink);color:#fff;font-size:11.5px;padding:3px 8px;border-radius:7px;white-space:nowrap;transform:translate(-50%,-130%)}
+.line-ctl{display:flex;align-items:center;gap:8px;width:min(360px,100%);position:relative}
+.line-ctl > span{font-size:12.5px;font-weight:600;color:var(--ink-2);flex:none}
+.line-ctl .seg{flex:1;background:var(--glass-strong);border:1px solid var(--line)}
+.gear{position:relative}
+.gear > summary{list-style:none;width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--glass-strong);display:grid;place-items:center;cursor:pointer}
+.gear > summary::-webkit-details-marker{display:none}
+.gear > summary svg{width:16px;height:16px;fill:none;stroke:var(--ink-2);stroke-width:1.8}
+.gear-menu{position:absolute;right:0;bottom:42px;width:240px;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;z-index:30;background:rgba(255,255,255,.95)}
+.stage-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
+.chip-toggle{border:1px solid var(--line);background:var(--glass-strong);border-radius:20px;padding:6px 12px;font-size:12.5px;display:inline-flex;gap:6px;align-items:center;user-select:none}
+.chip-toggle[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip-toggle:disabled{opacity:.4;cursor:not-allowed}
+.chip-toggle svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.comparing .phone{box-shadow:0 0 0 3px var(--ink),var(--shadow)}
+
+/* popover */
+.pop{position:absolute;z-index:30;width:280px;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.95)}
+.pop-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pop-h b{font-size:14px}
+.pop-h small{display:block;font-size:11px;color:var(--ink-3);font-weight:400}
+.pop-x{width:28px;height:28px;border-radius:8px;border:0;background:rgba(27,33,48,.06)}
+.tabs{display:flex;gap:2px;background:rgba(27,33,48,.05);border-radius:10px;padding:3px}
+.tabs button{flex:1;border:0;background:transparent;border-radius:8px;padding:5px;font-size:12.5px;font-weight:500;color:var(--ink-2)}
+.tabs button[aria-selected="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(20,30,50,.12)}
+.pop-lab{font-size:11px;font-weight:600;color:var(--ink-3)}
+.pop-sw{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.pop-sw button{aspect-ratio:1;border-radius:9px;border:1px solid rgba(27,33,48,.12);padding:0;position:relative}
+.pop-sw button[aria-pressed="true"]{box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--ink)}
+.sugg{display:flex;flex-wrap:wrap;gap:6px}
+.sugg button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:20px;padding:3px 9px 3px 4px;font-size:11.5px;color:var(--ink-2)}
+.sugg button i{width:16px;height:16px;border-radius:50%;border:1px solid rgba(27,33,48,.15);display:inline-block}
+.sugg button em{font-style:normal;font-family:var(--f-mono);font-size:10.5px;color:var(--ok)}
+.sugg button[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.pop-row{display:flex;gap:8px;align-items:center}
+.pop-row .swatch-in{width:32px;height:32px;border-radius:9px}
+.pop-row code{font-family:var(--f-mono);font-size:12px;flex:1}
+.notice{border-radius:10px;padding:8px 10px;font-size:11.5px;line-height:1.45;display:flex;flex-direction:column;gap:6px}
+.notice.adj{background:rgba(27,33,48,.05);color:var(--ink-2)}
+.notice.warn{background:var(--bad-bg);color:var(--bad)}
+.notice .pair{display:flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:11px}
+.notice .pair i{width:16px;height:16px;border-radius:5px;border:1px solid rgba(27,33,48,.15);display:inline-block}
+.links{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:11.5px;color:var(--ink-3)}
+.links .lk{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:20px;padding:2px 8px;background:#fff;color:var(--ink-2)}
+.links .lk button{border:0;background:transparent;font-size:11px;color:var(--ink);text-decoration:underline;padding:0}
+
+/* right */
+.badge{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.72)}
+.badge .dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;flex:none}
+.badge .dot svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.badge.ok .dot{background:var(--ok-bg);color:var(--ok)}
+.badge.warn .dot{background:var(--warn-bg);color:var(--warn)}
+.badge b{display:block;font-size:14px}
+.badge span{font-size:11.5px;color:var(--ink-3)}
+.badge .btn{margin-left:auto}
+details.acc{display:block}
+details.acc > summary{list-style:none;cursor:pointer;user-select:none;display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:2px 0}
+details.acc > summary::-webkit-details-marker{display:none}
+details.acc > summary .sum{font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--ink-2);font-family:var(--f-disp)}
+details.acc > summary .sum::before{content:"";display:inline-block;width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(-45deg);margin-right:9px;vertical-align:2px;transition:transform .15s}
+details.acc[open] > summary .sum::before{transform:rotate(45deg);vertical-align:3px}
+details.acc > :not(summary){margin-top:10px}
+.checks{display:flex;flex-direction:column;gap:6px}
+.chk-h{font-size:11px;font-weight:600;color:var(--ink-3);letter-spacing:.04em;margin-top:4px}
+.check{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:7px 10px;border-radius:11px;background:rgba(255,255,255,.6);border:1px solid var(--line)}
+.check.area{border-style:dashed;background:rgba(255,255,255,.4)}
+.check .sample{width:30px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:11px;font-weight:600;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.check span{font-size:12.5px;color:var(--ink-2)}
+.check small{color:var(--ink-3);font-size:10.5px}
+.check b{font-family:var(--f-mono);font-size:12px;font-weight:500;font-variant-numeric:tabular-nums}
+.pill{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.pill.ok{background:var(--ok-bg);color:var(--ok)}
+.pill.bad{background:var(--bad-bg);color:var(--bad)}
+.pill.weak{background:var(--warn-bg);color:var(--warn)}
+.pill.info{background:rgba(27,33,48,.07);color:var(--ink-2)}
+.edits{display:flex;flex-wrap:wrap;gap:6px}
+.edit{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:rgba(255,255,255,.7);border-radius:20px;padding:3px 4px 3px 4px;font-size:11.5px;color:var(--ink-2)}
+.edit i{width:16px;height:16px;border-radius:50%;border:1px solid rgba(27,33,48,.15)}
+.edit button{border:0;background:transparent;width:18px;height:18px;border-radius:50%;color:var(--ink-3)}
+.export{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.saved{display:flex;flex-direction:column;gap:6px}
+.saved-item{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center}
+.saved-item .load{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:rgba(255,255,255,.62);border-radius:11px;padding:6px 8px;text-align:left}
+.saved-item .load:hover{background:#fff}
+.saved-item .bars{display:flex;width:72px;height:20px;border-radius:6px;overflow:hidden;flex:none}
+.saved-item .bars i{flex:1}
+.saved-item .load span{font-size:12px;color:var(--ink-2)}
+.saved-item .del{width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.6);color:var(--ink-3)}
+.sl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center}
+.sl label{font-size:12.5px;color:var(--ink-2)}
+.sl output{font-family:var(--f-mono);font-size:11.5px}
+.sl input{grid-column:1 / -1}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:20px;background:transparent;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:4px;background:linear-gradient(to right,var(--ink) var(--p,50%),rgba(27,33,48,.12) var(--p,50%))}
+input[type=range]::-moz-range-track{height:4px;border-radius:4px;background:rgba(27,33,48,.12)}
+input[type=range]::-moz-range-progress{height:4px;border-radius:4px;background:var(--ink)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#fff;border:1px solid rgba(27,33,48,.2);box-shadow:0 1px 4px rgba(20,30,50,.25);margin-top:-6px}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:1px solid rgba(27,33,48,.2)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.photo-out{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.55)}
+.photo-out .ph{display:flex;gap:10px;align-items:center}
+.photo-out img{width:56px;height:56px;object-fit:cover;border-radius:9px;flex:none}
+.photo-out .sugg{flex:1}
+.png-ov{position:fixed;inset:0;z-index:70;background:rgba(20,24,34,.38);display:grid;place-items:center;padding:16px}
+.png-card{width:min(420px,100%);max-height:calc(100vh - 32px);overflow:auto;border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,.96)}
+.png-card img{width:100%;max-width:320px;align-self:center;border-radius:20px;box-shadow:0 8px 30px rgba(20,30,50,.18)}
+.png-card .seg button{padding:5px 10px}
+
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;background:var(--ink);color:#fff;padding:9px 14px;border-radius:12px;font-size:13px;transition:all .25s;z-index:50;display:flex;gap:10px;align-items:center;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast button{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:8px;padding:3px 9px;font-size:12px}
+.copybox{position:fixed;inset:auto 16px calc(16px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto;z-index:60;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px;background:rgba(255,255,255,.96)}
+.copybox textarea{width:100%;height:160px;font-family:var(--f-mono);font-size:11.5px;border:1px solid var(--line);border-radius:10px;padding:8px;resize:vertical}
+
+@media (max-width:760px){
+  .stage{grid-column:1 / -1;position:relative;top:auto;order:-1}
+}
+@media (max-width:760px){
+  .wrap{grid-template-columns:minmax(0,1fr)}
+  .phone{min-height:520px;max-height:none}
+  .brand small,.steps{display:none}
+  .recs{grid-template-columns:repeat(2,1fr)}
+}
+/* ---------- layout: side panel (step tabs) · fixed preview ---------- */
+.side{position:relative;border-radius:22px;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.side-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:8px;border-bottom:1px solid var(--line);flex:none}
+.side-tabs button{display:flex;align-items:center;justify-content:center;gap:8px;border:0;background:transparent;border-radius:12px;padding:9px 10px;font-family:var(--f-disp);font-size:14px;font-weight:600;color:var(--ink-3);position:relative}
+.side-tabs button .step{background:rgba(27,33,48,.18)}
+.side-tabs button:hover{background:rgba(27,33,48,.04);color:var(--ink-2)}
+.side-tabs button[aria-selected="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(27,33,48,.1)}
+.side-tabs button[aria-selected="true"] .step{background:var(--ink)}
+.tab-dot{width:7px;height:7px;border-radius:50%;background:var(--warn);position:absolute;top:9px;right:12px}
+.side-body{min-height:0}
+.side .panel{border-radius:0}
+.side .drawer{background:#fff;border:0;border-radius:22px}
+.next-step{align-self:stretch;gap:6px;padding:10px 12px}
+.next-step svg{width:13px;height:13px}
+.exp-grp{display:grid;grid-template-columns:56px 1fr;gap:8px;align-items:center}
+.exp-lab{font-size:11.5px;color:var(--ink-3);font-weight:600}
+.exp-row{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px}
+.exp-row .btn{padding:6px 8px;font-size:12.5px}
+#toKakao{padding:10px 12px}
+.stage-main{display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0;min-height:0}
+.stage-tools{display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0}
+.read-pill{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--glass-strong);border-radius:999px;padding:6px 12px 6px 8px;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer}
+.read-pill i{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;flex:none}
+.read-pill i svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.read-pill.ok i{background:var(--ok-bg);color:var(--ok)}
+.read-pill.warn{border-color:var(--warn);background:var(--warn-bg)}
+.read-pill.warn i{background:#fff;color:var(--warn)}
+.read-pill small{font-weight:500;color:var(--ink-3)}
+/* tablet and up: an app shell — the page itself doesn't scroll; the side panel scrolls on its own and the preview stays put */
+@media (min-width:761px){
+  body{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+  .top{flex:none}
+  .wrap{flex:1;min-height:0;width:100%;grid-template-columns:minmax(320px,400px) minmax(0,1fr);padding-block:16px;align-items:stretch}
+  .side-body{flex:1;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+  .stage{position:relative;top:auto;order:0;grid-column:auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;justify-content:flex-start;padding-block:2px 8px}
+  .stage-tools{width:min(360px,100%)}
+  .stage > *,.stage-main > *{flex:none}
+}
+/* wide: phone fills the height, tools sit beside it */
+@media (min-width:1024px){
+  .stage{display:grid;grid-template-columns:auto minmax(240px,300px);grid-template-rows:minmax(0,1fr);justify-content:center;align-items:center;gap:28px;overflow:hidden;padding:0}
+  .stage-main{height:100%;justify-content:center}
+  .phone{flex:0 1 auto;height:calc(100% - 60px);max-height:820px;min-height:0;width:auto;aspect-ratio:9/18.6}
+  .stage-tools{width:100%;align-items:stretch;gap:14px;padding:16px;border-radius:20px;background:var(--glass);border:1px solid var(--line)}
+  .stage-tools .read-pill{align-self:flex-start}
+  .stage-tools .line-ctl{width:100%;flex-wrap:wrap;gap:6px}
+  .stage-tools .line-ctl > span{flex-basis:100%}
+  .stage-tools .gpart{flex:1 1 100%;width:100%;max-width:none}
+  .stage-tools .grecs{flex:1 1 100%}
+  .stage-tools .stage-bar{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding-top:12px;border-top:1px solid var(--line)}
+  .stage-tools .stage-bar .chip-toggle{justify-content:center}
+  .stage-tools .stage-bar #undoBtn{order:1}
+  .stage-tools .stage-bar #grayBtn{order:2}
+  .stage-tools .stage-bar #cmpBtn{order:3;grid-column:1 / -1}
+  .stage-tools .stage-bar #saveCombo{order:4;grid-column:1 / -1}
+}
+@media (max-width:760px){
+  .drawer{position:fixed;inset:auto 0 0;max-height:72vh;border-radius:22px 22px 0 0;z-index:40}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* 카톡 테마 편집과 같은 모양의 이동 버튼 (헤더 오른쪽 끝) */
+.kt-link{margin-left:auto;display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;border:1.5px solid #e1e5ec;background:#fff;color:var(--ink);font-family:var(--f-body);font-weight:500;font-size:.95rem;text-decoration:none;white-space:nowrap;transition:border-color .15s,color .15s,transform .15s}
+.kt-link svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.kt-link:hover{border-color:#2450d6;color:#2450d6}
+.kt-link:active{transform:scale(.96)}
+.kt-link:focus-visible{outline:2px solid #2450d6;outline-offset:2px}
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 30 30" aria-hidden="true"><path d="M8 4h14a6 6 0 0 1 6 6v6a6 6 0 0 1-6 6H13l-6 4.5V22a6 6 0 0 1-5-6v-6a6 6 0 0 1 6-6z" fill="#1B2130"/><circle cx="10" cy="13" r="1.8" fill="#fff"/><circle cx="15" cy="13" r="1.8" fill="#fff" opacity=".7"/><circle cx="20" cy="13" r="1.8" fill="#fff" opacity=".4"/></svg>
+      <h1>말풍선 테마 스튜디오</h1>
+    </div>
+    <a class="kt-link" id="toEditor" href="index.html">카톡 테마 편집으로 이동<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a>
+  </div>
+</header>
+
+<main class="wrap">
+  <aside class="side glass" id="side">
+  <div class="side-tabs" role="tablist" aria-label="단계">
+    <button type="button" role="tab" id="tabPick" data-step="pick" aria-controls="panelPick" aria-selected="true"><span class="step">1</span>고르기</button>
+    <button type="button" role="tab" id="tabFinish" data-step="finish" aria-controls="panelFinish" aria-selected="false"><span class="step">2</span>마무리<i class="tab-dot" id="finishDot" hidden></i></button>
+  </div>
+  <div class="drawer" id="drawer" hidden role="dialog" aria-label="그라데이션 편집"></div>
+  <div class="side-body" id="sideBody">
+  <!-- 1 고르기 -->
+  <section class="panel" id="panelPick" role="tabpanel" aria-labelledby="tabPick">
+    <div class="sec base-sec">
+      <div class="sec-h"><h2>기준색</h2><span class="hint">색 하나만 고르면 무드별로 추천해요</span></div>
+      <div class="base-row big">
+        <div class="swatch-in" id="baseSw"><input type="color" id="baseColor" aria-label="기준색 선택"></div>
+        <input class="hex" id="baseHex" maxlength="7" spellcheck="false" aria-label="기준색 HEX">
+        <button class="btn" id="shuffle" type="button" title="새 기준색으로 섞기 (잠근 칸은 유지)"><svg viewBox="0 0 24 24"><path d="M16 4h4v4M4 20l16-16M20 16v4h-4M15 15l5 5M4 4l5 5"/></svg>섞기</button>
+      </div>
+      <div class="nobase"><span>기준색이 없나요?</span>
+        <label class="btn sm" for="photoFile" title="사진에서 대표색을 뽑아 기준색으로 써요"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-5-5-8 8"/></svg>사진에서 뽑기</label>
+        <button class="btn sm" type="button" data-jump="libSec">추천 조합에서 고르기</button>
+        <input type="file" id="photoFile" accept="image/*" class="sr">
+      </div>
+      <div class="photo-out" id="photoOut" hidden></div>
+    </div>
+
+    <div class="sec">
+      <div class="tagrow"><span>무드</span><div class="chips" data-tag="tone"></div></div>
+      <div class="tagrow"><span>온도</span><div class="chips" data-tag="temp"></div></div>
+      <div class="tagrow"><span>용도</span><div class="chips" data-tag="theme"></div></div>
+      <div class="rec-bar">
+        <button class="btn dark" id="recBtn" type="button"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>다시 추천</button>
+        <span id="baseFix"></span>
+      </div>
+      <p class="note" id="recNote"></p>
+      <div class="recs" id="recs"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><h2>다듬기 · 색 넓히는 방식</h2><span class="hint">누르기 전에 결과 미리보기</span></div>
+      <div class="rules" id="rules"></div>
+      <div class="strip" id="strip"></div>
+      <div class="arr-row"><button class="btn dark arr-btn" type="button" data-arrange><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3"/><circle cx="15.5" cy="15.5" r="1.3"/><circle cx="15.5" cy="8.5" r="1.3"/><circle cx="8.5" cy="15.5" r="1.3"/></svg>팔레트 안에서 배치 바꾸기</button><span class="hint" id="arrNote">누를 때마다 위 6색으로 배경·말풍선·버튼을 다르게 짜요</span></div>
+      <p class="note" id="stripNote"></p>
+    </div>
+
+    <div class="sec" id="libSec">
+      <div class="lib-bar"><h2 class="hint" style="margin:0;font-weight:600;color:var(--ink-2);font-size:12px;letter-spacing:.06em">추천 조합 <span id="libCount"></span></h2></div>
+      <div class="seg lib-col" id="libSort"></div>
+      <p class="note" id="libNote"></p>
+      <div class="curated" id="curated"></div>
+      <button class="btn sm lib-more" id="libMore" type="button"></button>
+    </div>
+    <button class="btn next-step" type="button" data-goto="finish">다음: 마무리 · 내보내기<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></button>
+  </section>
+
+  <!-- 2 마무리 -->
+  <section class="panel" id="panelFinish" role="tabpanel" aria-labelledby="tabFinish" hidden>
+    <div class="sec">
+      <div class="badge" id="badge"></div>
+      <details class="acc">
+        <summary><span class="sum">가독성 상세</span><span class="hint">글자 · 면 · 선</span></summary>
+        <div class="checks" id="checks"></div>
+      </details>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><h2>수정한 부위 <span id="editCount"></span></h2><button class="btn sm" id="resetOver" type="button">모두 초기화</button></div>
+      <div class="edits" id="edits"></div>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><h2>내보내기</h2></div>
+      <button class="btn dark" id="toKakao" type="button" hidden>카톡 테마에 적용</button>
+      <div class="exp-grp"><span class="exp-lab">복사</span>
+        <div class="exp-row"><button class="btn dark" id="copyCss" type="button">CSS</button><button class="btn" id="copyHex" type="button">HEX</button><button class="btn" id="copyJson" type="button">JSON</button></div></div>
+      <div class="exp-grp"><span class="exp-lab">불러오기</span>
+        <div class="exp-row"><label class="btn" for="jsonFile" style="cursor:pointer">JSON 파일</label><button class="btn" id="pasteJson" type="button">붙여넣기</button></div></div>
+      <input type="file" id="jsonFile" accept=".json,application/json" class="sr">
+      <button class="btn" id="pngBtn" type="button"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-5-5-8 8"/></svg>미리보기를 PNG 이미지로</button>
+      <details class="figma" id="figmaMenu">
+        <summary class="btn"><svg viewBox="0 0 24 24"><path d="M9 3h3v6H9a3 3 0 0 1 0-6zM12 3h3a3 3 0 0 1 0 6h-3zM9 9h3v6H9a3 3 0 0 1 0-6zM15 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM9 15h3v3a3 3 0 1 1-3-3z"/></svg>Figma로 복사 (SVG)</summary>
+        <div class="figma-pop">
+          <button class="btn sm" type="button" data-fig="grad">그라디언트만</button>
+          <button class="btn sm" type="button" data-fig="sheet">팔레트 시트</button>
+          <button class="btn sm" type="button" data-fig="chat">채팅 화면 전체</button>
+          <p class="note">Figma 캔버스에서 우클릭 → <b>Paste here</b>로 붙여넣어요. 선형·방사형은 편집 가능한 그라디언트로, 메시는 겹친 원 그룹으로 들어가요. 글자는 Figma에 같은 글꼴(IBM Plex Sans KR)이 있어야 똑같이 보여요.</p>
+        </div>
+      </details>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><h2>저장한 조합</h2><span class="hint">이 브라우저에만 저장</span></div>
+      <div class="saved" id="saved"></div>
+    </div>
+  </section>
+  </div>
+  </aside>
+
+  <!-- preview -->
+  <section class="stage" id="stage" aria-label="미리보기">
+    <div class="stage-main">
+    <div class="stage-top">
+      <div class="seg" id="modeSeg"><button type="button" data-v="light">라이트</button><button type="button" data-v="dark">다크</button></div>
+      <div class="seg" id="sampleSeg"><button type="button" data-v="short">짧은 대화</button><button type="button" data-v="long">긴 문단</button><button type="button" data-v="emoji">이모지·링크</button></div>
+    </div>
+    <div class="phone glass">
+      <div class="screen" id="screen">
+        <div class="island" aria-hidden="true"></div>
+        <div class="status" data-part="header"><span>2:17</span><span class="icons">
+          <svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+          <svg viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="currentColor" opacity=".5"/><rect x="2" y="2" width="16" height="8" rx="1.6"/><rect x="23.5" y="4" width="2" height="4" rx="1" opacity=".5"/></svg></span></div>
+        <div class="chat-head" data-part="header">
+          <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+          <div class="name">디자인팀 하린<small>2</small></div>
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </div>
+        <div class="msgs" id="msgs" data-part="bg"></div>
+        <form class="inputbar" id="composer" data-part="header">
+          <button class="plus" type="button" aria-label="첨부" tabindex="-1"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+          <input id="composeInput" type="text" placeholder="입력 후 Enter로 보내기" autocomplete="off">
+          <button class="send" type="button" data-part="accent" aria-label="강조색 편집"><svg viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></svg></button>
+        </form>
+        <div class="hl" id="hl" hidden></div>
+      </div>
+    </div>
+    </div>
+    <div class="stage-tools">
+    <button class="read-pill" id="readPill" type="button" title="마무리 탭에서 가독성 상세 보기"></button>
+    <div class="line-ctl"><span>말풍선 선</span>
+      <div class="seg" id="lineLevel"><button type="button" data-v="none">없음</button><button type="button" data-v="soft">은은하게</button><button type="button" data-v="bold">선명하게</button></div>
+      <details class="gear" id="gear"><summary aria-label="안쪽 선 두께"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg></summary>
+        <div class="gear-menu glass">
+          <div class="sl"><label for="s_lineW">안쪽 선 두께</label><output id="lineWOut"></output><input id="s_lineW" type="range" min="0.5" max="4" step="0.25"></div>
+          <p class="note">선은 말풍선 바깥 가장자리에 딱 붙어 있고, 두께를 올리면 안쪽으로만 두꺼워져요. 말풍선 크기는 그대로예요.</p>
+        </div>
+      </details>
+    </div>
+    <div class="line-ctl"><span>그라데이션</span>
+      <select id="gPart" class="gpart" aria-label="그라데이션을 넣을 부위"></select>
+      <div class="grecs" id="gradRecs" role="group" aria-label="그라데이션 프리셋"></div>
+    </div>
+    <div class="line-ctl"><span>말풍선 모양</span>
+      <div class="seg" id="shapeSeg"><button type="button" data-v="round">둥근</button><button type="button" data-v="square">각진</button><button type="button" data-v="pill">알약</button></div>
+    </div>
+    <button class="btn dark arr-btn" type="button" data-arrange title="지금 팔레트 6색 안에서 배경·말풍선·버튼 배치를 바꿔요"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3"/><circle cx="15.5" cy="15.5" r="1.3"/><circle cx="15.5" cy="8.5" r="1.3"/><circle cx="8.5" cy="15.5" r="1.3"/></svg>배치 바꾸기</button>
+    <div class="stage-bar">
+      <button class="chip-toggle" id="undoBtn" type="button" disabled title="되돌리기 (Ctrl/⌘+Z)"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>되돌리기</button>
+      <button class="chip-toggle" id="cmpBtn" type="button" disabled title="누르고 있는 동안 직전 상태를 보여줘요"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="8" height="14" rx="2"/><rect x="13" y="5" width="8" height="14" rx="2"/></svg>누르는 동안 이전 안</button>
+      <button class="chip-toggle" id="grayBtn" type="button" aria-pressed="false">흑백</button>
+      <button class="chip-toggle" id="saveCombo" type="button">저장</button>
+    </div>
+    </div>
+    <div class="hover-lab" id="hoverLab" hidden></div>
+
+    <div class="pop glass" id="pop" hidden role="dialog" aria-labelledby="popTitle">
+      <div class="pop-h"><b id="popTitle"></b><button class="pop-x" id="popClose" type="button" aria-label="닫기">✕</button></div>
+      <div class="tabs" id="popTabs" role="tablist"></div>
+      <div id="popBody" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+  </section>
+
+</main>
+
+<div class="png-ov" id="pngOv" hidden role="dialog" aria-label="PNG 이미지">
+  <div class="png-card glass">
+    <div class="pop-h"><b>미리보기 이미지</b><button class="pop-x" id="pngClose" type="button" aria-label="닫기">✕</button></div>
+    <img id="pngImg" alt="현재 테마의 채팅 미리보기 이미지">
+    <p class="note">이미지를 길게 누르거나 우클릭해서 저장하세요. 이 화면에서는 파일 다운로드가 막혀 있어요.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn dark" id="pngCopy" type="button">이미지 복사</button><div class="seg" id="pngScale"><button type="button" data-v="2">2배</button><button type="button" data-v="3">3배</button></div></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="toastUndo" type="button" hidden>되돌리기</button></div>
+
+<script>
+(() => {
+/* ---------- color utils ---------- */
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const hexOk=h=>/^#?[0-9a-f]{6}$/i.test(h);
+const norm=h=>('#'+h.replace('#','')).toUpperCase();
+function hexToRgb(h){h=h.replace('#','');return [0,2,4].map(i=>parseInt(h.substr(i,2),16));}
+function rgbToHex(r,g,b){return '#'+[r,g,b].map(v=>Math.round(clamp(v,0,255)).toString(16).padStart(2,'0')).join('').toUpperCase();}
+function rgbToHsl(r,g,b){r/=255;g/=255;b/=255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b);let h=0,s=0,l=(mx+mn)/2;
+  if(mx!==mn){const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;h*=60;}return [h,s,l];}
+function hslToHex(h,s,l){h=((h%360)+360)%360;s=clamp(s,0,1);l=clamp(l,0,1);
+  const k=n=>(n+h/30)%12,a=s*Math.min(l,1-l),f=n=>l-a*Math.max(-1,Math.min(k(n)-3,9-k(n),1));
+  return rgbToHex(f(0)*255,f(8)*255,f(4)*255);}
+const hexToHsl=h=>rgbToHsl(...hexToRgb(h));
+function lum(h){return hexToRgb(h).map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)}).reduce((a,v,i)=>a+v*[.2126,.7152,.0722][i],0);}
+function contrast(a,b){const A=lum(a),B=lum(b);return (Math.max(A,B)+.05)/(Math.min(A,B)+.05);}
+function mix(a,b,t){const A=hexToRgb(a),B=hexToRgb(b);return rgbToHex(...A.map((v,i)=>v+(B[i]-v)*t));}
+const isDark=h=>lum(h)<.18;
+const hueDiff=(a,b)=>Math.abs(((a-b+540)%360)-180);
+function bestText(bg,...cands){
+  const hit=cands.find(c=>c&&contrast(bg,c)>=4.5);if(hit)return hit;
+  return [...cands.filter(Boolean),'#FFFFFF','#111418'].reduce((a,c)=>contrast(bg,c)>contrast(bg,a)?c:a);
+}
+/* move col's lightness until it reaches min contrast against `against` (away from it) */
+function ensureContrast(col,against,min){
+  let [h,s,l]=hexToHsl(col),c=col;const dir=lum(against)>.35?-1:1;
+  for(let i=0;i<60&&contrast(c,against)<min;i++){l=clamp(l+dir*.02,0,1);c=hslToHex(h,s,l);if(l<=0||l>=1)break;}
+  return c;
+}
+/* like ensureContrast, but always moves away from the reference surface (used for surface ↔ surface hierarchy) */
+function ensureAway(col,ref,min){
+  const [h,s,l0]=hexToHsl(col),first=lum(col)<=lum(ref)?-1:1;
+  for(const dir of [first,-first]){ /* if one side runs out of room, try the other */
+    let l=l0,c=col;
+    for(let i=0;i<60&&contrast(c,ref)<min;i++){l=clamp(l+dir*.02,0,1);c=hslToHex(h,s,l);if(l<=0||l>=1)break;}
+    if(contrast(c,ref)>=min)return c;
+  }
+  return col;
+}
+function softFix(col,bg,min){
+  let [h,s,l]=hexToHsl(col),c=col;const cap=Math.max(s,Math.min(.82,s+.3));
+  for(let i=0;i<10&&contrast(c,bg)<min&&s<cap;i++){s=Math.min(cap,s+.08);c=hslToHex(h,s,l);}
+  return contrast(c,bg)>=min?c:ensureContrast(c,bg,min);
+}
+
+/* ---------- filters: 무드 (tone) · 온도 (temp) · 용도 (theme) ----------
+   무드 = how the palette is built (OKLCH targets below). 온도 never moves the base hue: it only warms/cools the background and text.
+   용도 = a bias for recommendations (preferred moods / accent styles), never a restyle. */
+/* HSL ranges are only used for the 6-slot strip */
+const TONE={
+  pastel:{n:'파스텔',s:[.25,.55],l:[.78,.92]}, vivid:{n:'비비드',s:[.65,.9],l:[.5,.62]}, muted:{n:'뮤트',s:[.15,.35],l:[.55,.75]},
+  vintage:{n:'빈티지',s:[.2,.4],l:[.6,.78]}, minimal:{n:'미니멀',s:[0,.08],l:null}, dark:{n:'다크',s:[.2,.5],l:[.12,.3]}, neon:{n:'네온',s:[.9,1],l:[.5,.6]}
+};
+/* role targets in OKLCH [L, C] (review doc §6-2). paper: bg/text hue starts at this hue and leans 30% toward the base */
+const MOOD={
+  pastel: {n:'파스텔',bg:[.975,.015],sub:[.88,.09],acc:[.55,.13]},
+  vivid:  {n:'비비드',bg:[.985,.010],sub:[.80,.17],acc:[.60,.21]},
+  muted:  {n:'뮤트',  bg:[.965,.012],sub:[.78,.05],acc:[.50,.08]},
+  vintage:{n:'빈티지',bg:[.95,.025], sub:[.72,.08],acc:[.52,.12],paper:70},
+  minimal:{n:'미니멀',bg:[.985,.003],sub:[.86,.012],acc:[.48,.15]},
+  /* dark moods: the doc's sub (L .32–.33) sits on top of the received bubble in a chat, so my bubble is lifted to stay distinct */
+  dark:   {n:'다크',  bg:[.19,.015], sub:[.46,.07], acc:[.80,.12],dark:1},
+  neon:   {n:'네온',  bg:[.16,.030], sub:[.44,.12], acc:[.84,.30],dark:1}
+};
+const INT={weak:{n:'차분',k:.7},mid:{n:'적당',k:1},strong:{n:'다채',k:1.3}};
+const TEMPS={cool:{n:'차갑게',h:250},warm:{n:'따뜻하게',h:70}};
+const USE={
+  cafe:    {n:'카페·푸드',  moods:['vintage','muted','pastel'],acc:['soft','opp'],temp:'warm'},
+  business:{n:'비즈니스',  moods:['minimal','muted','vivid'],acc:['same','opp'],temp:'cool'},
+  kids:    {n:'키즈',      moods:['vivid','pastel'],acc:['opp','soft']},
+  nature:  {n:'자연·친환경',moods:['muted','pastel','vintage'],acc:['same','near']},
+  night:   {n:'엔터·야간',  moods:['neon','dark','vivid'],acc:['opp','near']},
+  beauty:  {n:'뷰티·웰니스',moods:['pastel','muted','minimal'],acc:['near','soft']}
+};
+const CONFLICT=[['pastel','night'],['minimal','kids'],['neon','nature']];
+const conflict=(mood,use)=>!!(mood&&use&&CONFLICT.some(([a,b])=>a===mood&&b===use));
+/* older saves used other keys (모노, 계절 테마, 뉴트럴 …) */
+function normTags(t){t=t||{};const tone=t.tone==='mono'?'minimal':(MOOD[t.tone]?t.tone:null);
+  return {tone,temp:TEMPS[t.temp]?t.temp:null,theme:USE[t.theme]?t.theme:null};}
+/* tone maps saturation/lightness proportionally into its range (keeps palette order) */
+function applyTags(hex,tags){
+  let [h,s,l]=hexToHsl(hex);
+  const T=tags.tone&&TONE[tags.tone];
+  if(T){s=lerp(T.s[0],T.s[1],s);if(T.l)l=lerp(T.l[0],T.l[1],l);}
+  return hslToHex(h,s,l);
+}
+const tagCount=t=>['tone','temp','theme'].filter(k=>t[k]).length;
+const tagLabel=t=>[t.tone&&MOOD[t.tone]&&MOOD[t.tone].n,t.temp&&TEMPS[t.temp]&&TEMPS[t.temp].n,t.theme&&USE[t.theme]&&USE[t.theme].n].filter(Boolean).join(' · ');
+
+/* ---------- OKLCH (perceptual lightness/chroma, gamut-clamped by chroma) ---------- */
+const s2l=c=>c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4),l2s=c=>c<=.0031308?12.92*c:1.055*Math.pow(c,1/2.4)-.055;
+function hexToOk(hex){const n=parseInt(hex.slice(1),16),r=s2l((n>>16&255)/255),g=s2l((n>>8&255)/255),b=s2l((n&255)/255);
+  const l=Math.cbrt(.4122214708*r+.5363325363*g+.0514459929*b),m=Math.cbrt(.2119034982*r+.6806995451*g+.1073969566*b),q=Math.cbrt(.0883024619*r+.2817188376*g+.6299787005*b);
+  const L=.2104542553*l+.793617785*m-.0040720468*q,A=1.9779984951*l-2.428592205*m+.4505937099*q,Bb=.0259040371*l+.7827717662*m-.808675766*q;
+  return [L,Math.hypot(A,Bb),(Math.atan2(Bb,A)*180/Math.PI+360)%360];}
+function okRgb(L,C,H){const a=C*Math.cos(H*Math.PI/180),b=C*Math.sin(H*Math.PI/180);
+  const l=(L+.3963377774*a+.2158037573*b)**3,m=(L-.1055613458*a-.0638541728*b)**3,q=(L-.0894841775*a-1.291485548*b)**3;
+  return [4.0767416621*l-3.3077115913*m+.2309699292*q,-1.2684380046*l+2.6097574011*m-.3413193965*q,-.0041960863*l-.7034186147*m+1.707614701*q];}
+function okToHex(L,C,H){L=clamp(L,0,1);H=((H%360)+360)%360;const inG=v=>v.every(x=>x>=-1e-4&&x<=1+1e-4);
+  let lo=0,hi=Math.max(0,C),rgb=okRgb(L,hi,H);
+  if(!inG(rgb)){for(let i=0;i<18;i++){const mid=(lo+hi)/2;if(inG(okRgb(L,mid,H)))lo=mid;else hi=mid;}rgb=okRgb(L,lo,H);}
+  return '#'+rgb.map(x=>Math.round(clamp(l2s(clamp(x,0,1)),0,1)*255).toString(16).padStart(2,'0')).join('').toUpperCase();}
+const hueLerp=(a,b,t)=>a+((((b-a)%360)+540)%360-180)*t;
+/* accent hue offset for each expansion style (adir flips the side for the asymmetric ones) */
+const ACC_OFF={shades:0,gradient:40,analog:40,comp:180,split:150,spot:165,classy:200,triad:120};
+/* the look a palette is built with: mood · intensity · accent side · extra accent turn · temperature */
+function lookOf(pal){const L=pal.look||{},t=pal.tags||{};
+  return {mood:L.mood!==undefined?L.mood:(t.tone||null),int:L.int||'mid',adir:L.adir||1,ah:L.ah||0,temp:L.temp!==undefined?L.temp:(t.temp||null)};}
+function moodRoles(base,look,rule){
+  const M=MOOD[look.mood],k=(INT[look.int]||INT.mid).k,[,bc,H0]=hexToOk(base),gray=bc<.025,H=gray?255:H0;
+  const off=ACC_OFF[rule]||0,aH=H+(off===180?180:(look.adir||1)*off)+(look.ah||0);
+  let bgH=M.paper!=null?hueLerp(M.paper,H,.3):H,bgC=gray?.004:M.bg[1]*Math.min(k,1.2);
+  const T=look.temp&&TEMPS[look.temp];if(T){bgH=hueLerp(bgH,T.h,.35);bgC+=.008;}
+  return {base:okToHex(M.bg[0],bgC,bgH),
+    sub:okToHex(M.sub[0],gray?Math.min(.012,M.sub[1]):M.sub[1]*k,H),
+    accent:okToHex(M.acc[0],M.acc[1]*k,aH),
+    neutral:M.dark?okToHex(.94,.012,bgH):okToHex(.26,.02,bgH)};
+}
+function tintTemp(hex,temp){const T=temp&&TEMPS[temp];if(!T)return hex;const [L,C,H]=hexToOk(hex);return okToHex(L,C+.008,hueLerp(H,T.h,.35));}
+
+/* ---------- palette & roles ---------- */
+/* Expansion rules, from the guide: 명도 대비 first (every rule spans light → dark),
+   채도 차이 for lead/support (only a few slots carry full saturation), 색상 관계 decides the hue set.
+   Each entry: [hue offset°, saturation (×S1, or absolute when abs), lightness]. Slot order matters (line colors, accent). */
+const RULES=[['shades','같은 계열','단색 · 같은 색상 명도 6단계'],['gradient','그라데이션','색상이 70°에 걸쳐 흐르며 어두워짐'],['analog','이웃 색','유사색 · ±60° 이웃 색'],['comp','반대 색','보색 · 기준색 3 + 반대색 3'],
+  ['split','부드러운 반대 색','분할 보색 · 반대편 양옆 ±30°'],['spot','포인트 한 색','차분한 기준색 + 튀는 한 색'],['classy','차분하게','저채도 · 웜그레이와 네이비'],['triad','다채롭게','120° 간격 세 색']];
+const ruleName=r=>(RULES.find(x=>x[0]===r)||RULES[0])[1];
+const RULE_SPEC={
+  shades:  [[0,.55,.95],[0,.75,.84],[0,.95,.7],[0,1,.54],[0,.9,.37],[0,.7,.2]],
+  gradient:[[0,.6,.9],[14,.75,.79],[28,.9,.67],[42,1,.55],[56,.95,.42],[70,.85,.3]],
+  analog:  [[-60,.85,.84],[-30,1,.7],[0,1,'L'],[30,1,.6],[60,.9,.46],[0,.55,.2]],
+  comp:    [[0,.45,.95],[0,1,'L'],[0,.9,.3],[180,1,.55],[180,.6,.86],[180,.75,.24]],
+  split:   [[0,.4,.94],[0,1,'L'],[0,.85,.28],[150,.95,.55],[210,.95,.55],[150,.5,.87]],
+  spot:    [[0,.12,.96,1],[0,.18,.85,1],[0,.22,.62,1],[0,1,'L'],[0,.25,.2,1],[150,1,.55]],
+  classy:  [[0,.08,.95,1],[0,.16,.8,1],[0,.3,.6,1],[30,.18,.45,1],[200,.24,.33,1],[0,.25,.17,1]],
+  triad:   [[0,.5,.92],[0,1,'L'],[120,.9,.55],[240,.9,.55],[120,.55,.86],[240,.55,.86]]
+};
+function genPalette(base,rule){
+  const [h,s,l]=hexToHsl(base),S1=Math.max(s,.45),L=clamp(l,.38,.68);
+  return (RULE_SPEC[rule]||RULE_SPEC.shades).map(([dh,ds,ll,abs])=>hslToHex(h+dh,clamp(abs?ds:S1*ds,0,1),ll==='L'?L:ll));
+}
+/* Tags move the whole palette instead of squashing it: the palette rotates by the base color's hue pull,
+   and saturation/lightness keep most of each slot's distance from the base (so 단색 stays a ladder, 보색 keeps its opposite). */
+function palFor(base,rule,tags){
+  const [bh,bs,bl]=hexToHsl(base),[mh,ms,ml]=hexToHsl(applyTags(base,tags)),dh=((mh-bh+540)%360)-180,T=tags.tone&&TONE[tags.tone];
+  const out=genPalette(base,rule).map(c=>{
+    let [h,s,l]=hexToHsl(c);h+=dh;
+    if(T){s=clamp(ms+(s-bs)*.7,T.s[1]===.08?0:ms*.3,T.s[1]===.08?.08:1);if(T.l)l=clamp(ml+(l-bl)*.8,.08,.96);} /* muted slots keep a trace of hue */
+    return [h,s,l];
+  });
+  /* no two neighbouring slots may come out identical (e.g. two near-whites in pastel): step the later one darker */
+  for(let i=1;i<out.length;i++){for(let k=0;k<12&&contrast(hslToHex(...out[i]),hslToHex(...out[i-1]))<1.06&&Math.abs(out[i][0]-out[i-1][0])<20;k++)out[i][2]=clamp(out[i][2]-.03,.05,.97);}
+  return out.map(([h,s,l])=>hslToHex(h,s,l));
+}
+/* a base the user picked (picker · HEX · photo) is kept as-is: tags don't restyle it, and the palette carries the exact color
+   in its anchor slot ('L' slot, or the same-hue slot closest in lightness) so lightness/saturation changes show up */
+const palTags=P=>P.baseFixed?{}:{tone:lookOf(P).mood};
+function palOf(P,rule){
+  const out=palFor(P.base,rule,palTags(P));if(!P.baseFixed)return out;
+  const spec=RULE_SPEC[rule]||RULE_SPEC.shades,bl=hexToHsl(P.base)[2];
+  let k=spec.findIndex(x=>x[2]==='L');
+  if(k<0)k=spec.reduce((b,x,i)=>x[0]===0&&(b<0||Math.abs(x[2]-bl)<Math.abs(spec[b][2]-bl))?i:b,-1);
+  out[k]=P.base;return out;
+}
+/* roles are always stored in light form; dark mode is derived in build */
+function rolesFor(pal){
+  const L=lookOf(pal);
+  if(!pal.baseFixed&&L.mood&&MOOD[L.mood])return moodRoles(pal.base,L,pal.rule);
+  const R=baseRoles(pal);if(!pal.baseFixed&&L.temp){R.base=tintTemp(R.base,L.temp);R.neutral=tintTemp(R.neutral,L.temp);}
+  return R;
+}
+/* no mood, or a fixed base: the base color itself is my bubble */
+function baseRoles(pal){
+  const tags=palTags(pal),sub=applyTags(pal.base,tags),[h,s,l]=hexToHsl(sub);
+  let accent;
+  if(['comp','split','spot','triad'].includes(pal.rule)){
+    accent=[...pal.swatches].sort((a,b)=>{const d=x=>{const [hh,ss]=hexToHsl(x);return hueDiff(hh,h)*(ss>.25?1:.2);};return d(b)-d(a);})[0];
+    const [ah,as]=hexToHsl(accent);accent=hslToHex(ah,Math.max(as,.55),.38);
+  }else accent=hslToHex(h,s<.12?s:Math.min(1,Math.max(s,.4)+.15),.3);
+  return {base:hslToHex(h,Math.min(s,.45),.965),sub:tags.tone==='dark'?hslToHex(h,s,clamp(1-l,.62,.85)):sub,accent,neutral:hslToHex(h,Math.min(.18,s+.05),.14)};
+}
+function toDark(R){const [h,s]=hexToHsl(R.base),[hs,ss,ls]=hexToHsl(R.sub),[ha,sa,la]=hexToHsl(R.accent);
+  return {base:hslToHex(h,Math.min(s,.3),.1),neutral:hslToHex(h,.12,.93),sub:hslToHex(hs,ss*.8,clamp(1-ls,.28,.42)),accent:hslToHex(ha,sa,Math.max(la,.64))};}
+function toLight(R){const [h,s]=hexToHsl(R.base),[hs,ss,ls]=hexToHsl(R.sub),[ha,sa,la]=hexToHsl(R.accent);
+  return {base:hslToHex(h,Math.min(s,.45),.965),neutral:hslToHex(h,.18,.14),sub:hslToHex(hs,ss,clamp(1-ls,.62,.85)),accent:hslToHex(ha,sa,Math.min(la,.4))};}
+function modeRoles(R,mode){const d=isDark(R.base);return mode==='dark'&&!d?toDark(R):mode==='light'&&d?toLight(R):R;}
+
+/* ---------- build: state → colors (pure, also used to score recommendations) ---------- */
+const LINE_MAP={shades:[2,4],gradient:[1,4],analog:[1,3],comp:[1,3],split:[3,4],spot:[3,5],classy:[2,4],triad:[2,3]};
+const LEVELS={none:{min:0,mute:0,emph:'fill'},soft:{min:1.6,mute:.3,emph:'fill'},bold:{min:2,mute:0,emph:'half'}};
+function buildFrom(st){
+  const R=modeRoles(st.pal.roles,st.mode),o=st.over||{},raw=st.raw||{},O=(k,v)=>o[k]||v,dark=isDark(R.base),ink=dark?R.base:R.neutral;
+  const recv=O('recv',dark?mix(R.base,R.neutral,.16):'#FFFFFF');
+  const pick={bg:O('bg',R.base),sent:O('sent',R.sub)};
+  const bg=raw.bg?pick.bg:ensureAway(pick.bg,recv,1.2);
+  let sent=raw.sent?pick.sent:ensureAway(pick.sent,recv,1.5);
+  /* if neither tinted text nor white/black reaches AA on the bubble, nudge the bubble's lightness away from its best text */
+  if(!raw.sent&&!o.senttext){const t=bestText(sent,R.neutral,ink);if(contrast(t,sent)<4.5)sent=ensureAway(sent,t,4.5);}
+  const header=O('header',dark?mix(bg,R.neutral,.06):mix(bg,'#FFFFFF',.55));
+  const accent=o.accent||ensureContrast(ensureContrast(R.accent,bg,3),header,3); /* CTA readable on both surfaces */
+  const C={bg,header,recv,sent,accent,
+    headtext:O('headtext',bestText(header,R.neutral,ink)),
+    recvtext:O('recvtext',bestText(recv,R.neutral,ink)),
+    senttext:O('senttext',bestText(sent,R.neutral,ink)),
+    meta:O('meta',ensureContrast(mix(R.neutral,bg,.38),bg,4.5)),
+    sendicon:bestText(accent,R.neutral,ink)};
+  C.avatar=O('avatar',mix(sent,bg,.3));C.avatartext=bestText(C.avatar,R.neutral,ink);
+  const s=st.stroke,LV=LEVELS[s.level],on=s.level!=='none';
+  const fill=c=>LV.emph==='fill'?c:mix(c,bg,.5);
+  const E={...C,recv:fill(recv),sent:fill(sent)};
+  if(LV.emph!=='fill'&&!raw.sent)E.sent=ensureAway(E.sent,E.recv,1.5); /* keep the two bubbles apart after the fill steps back */
+  if(LV.emph!=='fill'){E.recvtext=contrast(C.recvtext,E.recv)>=4.5?C.recvtext:bestText(E.recv,R.neutral,ink);E.senttext=contrast(C.senttext,E.sent)>=4.5?C.senttext:bestText(E.sent,R.neutral,ink);}
+  /* gradients (linear · radial · mesh): every color is a palette slot, a role color or the part's own color;
+     each part is independent — turning one on never changes another */
+  const G={},gr=st.grad||GRAD_OFF;
+  if(gradOn(gr).length){
+    const self={sent:E.sent,recv:E.recv,bg:C.bg,accent:C.accent};
+    const away={sent:E.recv,recv:C.bg,bg:E.recv,accent:C.header};
+    for(const k of GPARTS){const p=gr.parts[k];if(!p||!p.on)continue;
+      const col=(ref,dl)=>{let c=refColor(ref,st.pal,R,self[k],k,away[k]);if(dl)c=shiftAway(c,dl,away[k]);
+        if(LV.emph!=='fill'&&(k==='sent'||k==='recv')&&ref&&ref!=='self')c=fill(c);return c;};
+      G[k]=specFor(p,col,k);}
+    /* gradient first, text second: secondary text is re-checked against the background's weakest sample */
+    if(G.bg&&!o.meta){const lo=G.bg.samples.reduce((a,c)=>contrast(C.meta,c)<contrast(C.meta,a)?c:a),m=ensureContrast(C.meta,lo,4.5);
+      /* only accept the new text color if it works on EVERY sample; otherwise the gradient itself gets fixed */
+      if(Math.min(...G.bg.samples.map(x=>contrast(m,x)))>Math.min(...G.bg.samples.map(x=>contrast(C.meta,x))))C.meta=E.meta=m;}
+  }
+  const map=LINE_MAP[st.pal.rule],vs=side=>s.pos==='outline'?bg:(side==='s'?(G.sent?G.sent.avg:E.sent):(G.recv?G.recv.avg:E.recv));
+  /* with a gradient bubble, its line follows the palette color at the gradient's end */
+  const line=(i,side)=>{const g=G[side==='s'?'sent':'recv'];let c=g?g.endColor:(st.pal.swatches[i]||R.neutral);if(LV.mute)c=mix(c,bg,LV.mute);return on?softFix(c,vs(side),LV.min):c;};
+  let lr=line(map[0],'r'),ls=line(map[1],'s');
+  const [h1,s1]=hexToHsl(lr),[h2,s2]=hexToHsl(ls);
+  if(on&&(s1<.1||s2<.1||hueDiff(h1,h2)<25)&&contrast(lr,ls)<1.3) ls=ensureContrast(ls,vs('s'),contrast(lr,vs('s'))*1.45);
+  C.recvline=E.recvline=O('recvline',lr);C.sentline=E.sentline=O('sentline',ls);
+  return {C,E,R,pick,G};
+}
+
+/* ---------- gradient rules ---------- */
+const GPARTS=['sent','bg','accent','recv'];
+const GNAME={sent:'내 말풍선',bg:'채팅 배경',accent:'보내기 버튼',recv:'받은 말풍선'};
+const GRAD_OFF={parts:{}};
+/* per part: type 'linear' | 'radial' | 'mesh'
+   stops  (linear/radial, 2–4): [{ref, at, dl?, pull?}]   ref: 'self' | 'auto' | 'sw:i' | 'role:k'
+   points (mesh, 2–5):          [{ref, x, y, pull?}] over a `base` color, with a shared `spread` */
+const blankPart=()=>({on:false,type:'linear',stops:[{ref:'self',at:0},{ref:'auto',at:1}],angle:135,center:[.3,.3],points:[],spread:.6,base:'self'});
+const newGrad=()=>({parts:Object.fromEntries(GPARTS.map(k=>[k,blankPart()]))});
+const GTYPES={linear:'선형',radial:'방사형',mesh:'메시'};
+/* what each part may use (plan §4): received bubble stays near-solid, the 32px button never gets a mesh */
+const ALLOW={bg:{linear:4,radial:3,mesh:5},sent:{linear:4,radial:3,mesh:3},recv:{linear:2},accent:{linear:3,radial:3}};
+const ASPECT={sent:3,recv:3,bg:.5,accent:1};   /* width:height used for sampling and the drawer canvas */
+const STRONG_RULES=['comp','split','spot','triad'];
+function refColor(ref,pal,R,self,part,away){
+  if(!ref||ref==='self')return self;
+  if(ref==='auto')return gradTo(part,self,'bold',pal,away);
+  return resolveRef(ref,pal,R);
+}
+/* ±lightness on the same hue, toward whichever side keeps more contrast with the neighbouring surface */
+function shiftAway(c,dl,away){const [h,s,l]=hexToHsl(c),a=hslToHex(h,s,clamp(l+Math.abs(dl),0,1)),b=hslToHex(h,s,clamp(l-Math.abs(dl),0,1));return contrast(a,away)>contrast(b,away)?a:b;}
+const rgba0=c=>{const [r,g,b]=hexToRgb(c);return `rgba(${r},${g},${b},0)`;};
+function lineEnds(angle,w,h,mirror){const t=angle*Math.PI/180;let dx=Math.sin(t);const dy=-Math.cos(t);if(mirror)dx=-dx;
+  const L=Math.abs(w*Math.sin(t))+Math.abs(h*Math.cos(t));return [w/2-dx*L/2,h/2-dy*L/2,w/2+dx*L/2,h/2+dy*L/2];}
+const radR=([cx,cy])=>Math.hypot(Math.max(cx,1-cx),Math.max(cy,1-cy));   /* ellipse farthest-corner, in box units */
+function stopAt(stops,t){t=clamp(t,0,1);if(t<=stops[0].at)return stops[0].c;for(let i=1;i<stops.length;i++){const a=stops[i-1],b=stops[i];if(t<=b.at)return mix(a.c,b.c,(t-a.at)/Math.max(1e-6,b.at-a.at));}return stops[stops.length-1].c;}
+/* color of the gradient at (u,v) in a box of width `a` and height 1 — mirrors what CSS/SVG/canvas draw */
+function colorAt(g,u,v,a){
+  if(g.type==='linear'){const [x1,y1,x2,y2]=lineEnds(g.angle,a,1,false),dx=x2-x1,dy=y2-y1;return stopAt(g.stops,((u*a-x1)*dx+(v-y1)*dy)/(dx*dx+dy*dy));}
+  if(g.type==='radial')return stopAt(g.stops,Math.hypot(u-g.center[0],v-g.center[1])/radR(g.center));
+  let c=g.base;
+  for(const p of [...g.points].reverse()){const fx=Math.max(p.x,1-p.x)*a,fy=Math.max(p.y,1-p.y),R=g.spread*Math.hypot(fx,fy),d=Math.hypot((u-p.x)*a,v-p.y);
+    const al=clamp(1-d/R,0,1);if(al>0)c=mix(c,p.c,al);}
+  return c;
+}
+function avgColor(cs){const s=[0,0,0];cs.forEach(c=>hexToRgb(c).forEach((v,i)=>s[i]+=v));return rgbToHex(...s.map(v=>v/cs.length));}
+function gradCss(g){
+  if(g.type==='linear')return `linear-gradient(${g.angle}deg, ${g.stops.map(s=>`${s.c} ${Math.round(s.at*100)}%`).join(', ')})`;
+  if(g.type==='radial')return `radial-gradient(at ${Math.round(g.center[0]*100)}% ${Math.round(g.center[1]*100)}%, ${g.stops.map(s=>`${s.c} ${Math.round(s.at*100)}%`).join(', ')})`;
+  /* CSS has no mesh: stacked radial layers over the base color (what most mesh generators export) */
+  return g.points.map(p=>`radial-gradient(circle at ${Math.round(p.x*100)}% ${Math.round(p.y*100)}%, ${p.c} 0%, ${rgba0(p.c)} ${Math.round(g.spread*100)}%)`).join(', ')+`, linear-gradient(${g.base}, ${g.base})`;
+}
+/* resolve a part's settings into colors, then sample it on a 5×3 grid (plan §5) */
+function specFor(p,col,k){
+  const g={type:p.type,angle:p.angle||135,center:p.center||[.5,.5],spread:p.spread||.6};
+  if(p.type==='mesh'){g.base=col(p.base||'self');g.points=p.points.map(q=>({x:q.x,y:q.y,c:q.pull?mix(col(q.ref),g.base,q.pull):col(q.ref)}));g.endColor=(g.points[g.points.length-1]||{c:g.base}).c;}
+  else{const s0=col(p.stops[0].ref,p.stops[0].dl);g.stops=p.stops.map((s,i)=>{const c=i?col(s.ref,s.dl):s0;return {at:s.at,c:s.pull?mix(c,s0,s.pull):c};});g.endColor=g.stops[g.stops.length-1].c;}
+  const a=ASPECT[k];g.samples=[];for(const v of [.2,.5,.8])for(const u of [.1,.3,.5,.7,.9])g.samples.push(colorAt(g,u,v,a));
+  g.avg=avgColor(g.samples);
+  const byL=[...g.samples].sort((x,y)=>lum(x)-lum(y));g.dark=byL[0];g.light=byL[byL.length-1];
+  g.css=gradCss(g);g.colors=g.type==='mesh'?[g.base,...g.points.map(q=>q.c)]:g.stops.map(s=>s.c);
+  return g;
+}
+const isStrong=(c,baseHue)=>{const [h,s]=hexToHsl(c);return s>.5&&hueDiff(h,baseHue)>40;};
+/* palette slot as it appears in the current mode: in dark mode a light slot gets the same dark conversion the roles use
+   (hue kept, lightness moved into the dark-bubble band), so a gradient stays readable under light text */
+function slotFor(c,dark){if(!dark)return c;const [h,s,l]=hexToHsl(c);return l>.5?hslToHex(h,s*.8,clamp(1-l,.26,.46)):c;}
+function resolveRef(ref,pal,R){const [k,v]=ref.split(':'),dark=isDark(R.base);if(k==='sw')return slotFor(pal.swatches[+v]||R.sub,dark);if(k==='role')return R[v]||R.sub;return R.sub;}
+/* end color by expansion rule — always an existing palette slot (soft = same hue, ±8% lightness) */
+function gradTo(part,c0,level,pal,away){
+  const [h0,s0,l0]=hexToHsl(c0);
+  /* soft: same hue, lightness moved AWAY from the neighbouring surface so the hierarchy only gets stronger */
+  const soft=()=>{const d=part==='bg'?.04:.08;let dir=away?(lum(c0)>=lum(away)?1:-1):(l0<.3?1:-1);if(l0+dir*d>.97||l0+dir*d<.03)dir=-dir;return hslToHex(h0,s0,clamp(l0+dir*d,0,1));};
+  if(level==='soft')return soft();
+  const rule=pal.rule,strong=['comp','split','spot','triad'].includes(rule);
+  if(strong&&part!=='sent')return soft();                       /* strong-contrast rules: gradient on my bubble only */
+  const sw=pal.swatches.map(c=>({c,hsl:hexToHsl(c)})).filter(x=>contrast(x.c,c0)>=1.05);
+  const fam=x=>x.hsl[1]<.1||s0<.1||hueDiff(x.hsl[0],h0)<25;
+  let pool;
+  if(part==='bg'||part==='recv')pool=sw.filter(x=>x.hsl[2]>.8&&fam(x));
+  else if(part==='accent'||strong)pool=sw.filter(fam);         /* end color stays in the base family */
+  else if(rule==='shades'||rule==='gradient')pool=sw.filter(x=>fam(x)&&x.hsl[2]<l0);  /* one step darker */
+  else if(rule==='analog')pool=sw.filter(x=>{const d=hueDiff(x.hsl[0],h0);return d>=10&&d<=45;});
+  else if(rule==='classy')pool=sw.filter(x=>x.hsl[1]<.35);       /* low-chroma pairs */
+  if(!pool||!pool.length)pool=sw.filter(fam);
+  if(away&&part==='sent'){const far=pool.filter(x=>contrast(x.c,away)>=contrast(c0,away));if(far.length)pool=far;} /* prefer ends on the far side of the received bubble */
+  if(!pool.length)return soft();
+  pool.sort((a,b)=>Math.abs(a.hsl[2]-l0)-Math.abs(b.hsl[2]-l0));
+  let t=pool[0].c;
+  if(part==='bg'&&contrast(t,c0)>1.12)t=mix(t,c0,.5);           /* background stays faint */
+  if(part==='recv')t=mix(t,c0,.5);
+  return t;
+}
+const gradOn=g=>GPARTS.filter(k=>g.parts[k]&&g.parts[k].on);
+const meshPart=g=>GPARTS.find(k=>g.parts[k]&&g.parts[k].on&&g.parts[k].type==='mesh');
+
+/* ---------- state ---------- */
+const S={
+  pal:{base:'#8BEABB',rule:'shades',tags:{tone:null,temp:null,theme:null},swatches:[],locks:[false,false,false,false,false,false],roles:{},curated:0,baseFixed:false},
+  stroke:{level:'none',pos:'inset',width:1.5}, /* the line is always an inner line */
+  over:{},raw:{},mode:'light',sample:'short',gray:false,shape:'round',
+  grad:null
+};
+S.grad=newGrad();
+let B={C:{},E:{},R:{},pick:{},G:{}};
+let RECS=[],recPicked=-1,libSort='match',libAll=false;
+
+/* ---------- curated library: 24 originals (re-tagged) + 45 from the review doc §6-3 ----------
+   season = collection only (봄 · 여름 · 가을 · 겨울), never a filter */
+const OLD_SEASON={spring:'spring',summer:'summer',ocean:'summer',autumn:'autumn',winter:'winter'};
+const CURATED_OLD=[
+  ['민트 브리즈','#8BEABB','shades','pastel','neutral','nature',{base:'#F3FBF7',sub:'#8BEABB',accent:'#1F6F5C',neutral:'#1E2B26'}],
+  ['피치 소다','#FFB59A','comp','pastel','warm','summer',{base:'#FFF6F1',sub:'#FFC7B2',accent:'#C63F29',neutral:'#2E1F1B'}],
+  ['라벤더 노트','#B7A8F0','analog','pastel','cool','spring',{base:'#F6F4FC',sub:'#C9BEF2',accent:'#5B45C9',neutral:'#221D33'}],
+  ['버터 크림','#FFE07A','spot','pastel','warm','cafe',{base:'#FFFBEE',sub:'#FFE58A',accent:'#2F5BD3',neutral:'#26231A'}],
+  ['올리브 빈티지','#B9B07E','classy','vintage','warm','retro',{base:'#F5F2E8',sub:'#D6CFA8',accent:'#A24E2C',neutral:'#2B2A22'}],
+  ['체리 블라썸','#F2A7BC','shades','pastel','warm','spring',{base:'#FFF5F7',sub:'#F7C6D3',accent:'#C7335F',neutral:'#2D1D22'}],
+  ['오션 글래스','#7FC6E8','analog','vivid','cool','ocean',{base:'#F1F8FC',sub:'#A8D8EE',accent:'#0E6BA8',neutral:'#13222C'}],
+  ['미드나잇','#3A4670','comp','dark','cool','night',{base:'#12151F',sub:'#2A3350',accent:'#7CD4FF',neutral:'#E8ECF5'}],
+  ['라떼 브라운','#B08968','shades','muted','warm','cafe'],
+  ['모카 노트','#7F5539','classy','muted','warm','cafe'],
+  ['코랄 리프','#FF7F6E','comp','vivid','warm','summer'],
+  ['레몬 스쿼시','#F5D547','analog','vivid','warm','kids'],
+  ['딥 포레스트','#2D6A4F','shades','muted','neutral','nature'],
+  ['세이지 그린','#A3B18A','classy','muted','neutral','nature'],
+  ['아이스 블루','#A9D6E5','shades','pastel','cool','winter'],
+  ['스노우 그레이','#8D99AE','classy','mono','cool','winter'],
+  ['단풍','#D35F2D','analog','muted','warm','autumn'],
+  ['머스터드','#D4A017','spot','vintage','warm','autumn'],
+  ['레트로 팝','#E94F37','triad','vivid','warm','retro'],
+  ['미니멀 잉크','#2B2D42','shades','mono','neutral','minimal'],
+  ['오피스 네이비','#1D3557','comp','muted','cool','business'],
+  ['슬레이트','#5C677D','classy','muted','cool','business'],
+  ['캔디 팝','#FF8FAB','triad','vivid','warm','kids'],
+  ['네온 나이트','#7B2CBF','comp','neon','cool','night',null,'dark']
+].map(([name,base,rule,tone,temp,theme,roles,mode])=>{const tags=normTags({tone,temp,theme});
+  return {name,base,rule,tags,season:OLD_SEASON[theme]||null,roles,mode:mode||(tone==='dark'?'dark':'light')};});
+/* name · mood · temp · uses/seasons · bg · sub · accent · text (all pass AA in the doc; surface/on_accent are derived here) */
+const CURATED_NEW=`벚꽃 라떼|pastel|warm|spring cafe|FFF4F5|FFC6CE|AF5331|2D2022
+코튼 스카이|pastel|cool|spring kids|F0F8FF|B5DDFF|1777B8|1C252D
+레몬 셔벗|pastel|warm|summer kids|F9F7EC|E5D994|546BBD|262419
+라일락 미스트|pastel|cool|spring|F9F4FF|E2CCFF|3772BB|26222C
+살구 오후|pastel|warm|autumn cafe|FFF4EE|FFCBA9|AA5910|2C221B
+아쿠아 글라스|pastel|cool|summer|ECFAFC|8CE9F4|AA4D75|182729
+피스타치오|pastel|-|cafe nature|F3F9EF|C4E4A5|8959AA|21261C
+베이비 코랄|pastel|warm|summer kids|FFF4F2|FFC8C0|00808E|2D201F
+트로피컬 펀치|vivid|warm|summer|FFF8F7|FFA28A|00818C|2D211D
+일렉트릭 블루|vivid|cool|business|F7FAFF|9ABEFF|2A6CF0|1F242E
+선플라워|vivid|warm|summer kids|FCFAF3|DFBB00|745CEE|272419
+그린 시그널|vivid|-|nature business|F6FCF7|5EDB81|00893D|1D271F
+매직 퍼플|vivid|cool|night|FBF9FF|C9ACFF|D72E78|25222C
+체리 팝|vivid|warm|kids|FFF8F8|FF9EA6|008282|2D2021
+오션 다이브|vivid|cool|summer|F4FCFF|3FCFFF|C65100|19262B
+사이버 라임|neon|-|night|0A0F03|2B390B|ABE000|E9EDE4
+핫 핑크 시티|neon|warm|night|17080F|4D2238|FFAED4|F2E8EC
+레이저 블루|neon|cool|night business|040E1A|133555|A2CFFF|E5ECF3
+네온 오렌지|neon|warm|night|180904|4F2611|FFB797|F3E9E5
+아케이드 퍼플|neon|cool|night|100A18|3B294F|D9BAFF|EDE9F2
+바이오 민트|neon|-|night|01110B|003D2E|00ECBA|E4EEEA
+올리브 리넨|muted|-|nature|F3F5EC|B6BC97|626930|24251A
+더스티 로즈|muted|warm|autumn|FBF0F2|D4ABB3|894F5D|2D2023
+스톤 블루|muted|cool|winter business|EDF5FB|9BBCD5|855831|1B252D
+모스 그레이|muted|-|nature|EFF6EF|A4C0A4|456F46|1E271E
+클레이 테라코타|muted|warm|autumn cafe|FBF1ED|D5ADA0|8A533F|2D211D
+포그 라벤더|muted|cool|winter|F3F2FB|B6B3D6|635B8E|24222D
+겨울 숲|muted|cool|winter nature|EBF6F5|93C2BE|17726D|192726
+필름 카메라|vintage|warm||FBEBDE|CE9677|0070A6|2B221A
+올드 북|vintage|warm|cafe|FAECDD|C59C6D|00758E|2A221A
+레트로 다이너|vintage|warm|cafe|FCEBDF|D2918B|007781|2C221B
+머스터드 재즈|vintage|warm||F9ECDD|BCA169|6F59A6|2A2319
+빈티지 포스터|vintage|cool||EFF0DD|63B4B8|A3484B|25251A
+와인 셀러|vintage|warm|cafe night|FDEAE0|D0909E|A04760|2C211B
+미드나잇 네이비|dark|cool|winter business|10141B|28364D|EFB062|E7EBF3
+블랙 에메랄드|dark|-|nature night|0D1612|1D3D30|69D6AA|E4EEE9
+버건디 나이트|dark|warm|night cafe|1A1112|4A2C2E|E6B55D|F3E8E8
+차콜 앰버|dark|warm|cafe night|19120D|46301D|F6AB6B|F1E9E3
+딥 플럼|dark|cool|night|171218|402E44|E0A4EE|EFE9F0
+그라파이트 시안|dark|cool|business night|0C1617|143C42|47D2E8|E3EEF0
+화이트 큐브|minimal|-|business|F9FAFC|CCD1D9|0E5CAF|1E252E
+레드 스탬프|minimal|-||FCF9F9|D9CECD|A12F2F|2D201F
+오트밀 브라운|minimal|-|cafe|FCFAF8|D7CFC9|8A4B00|2B221A
+스노우 그린|minimal|-|winter|F9FBF9|CBD3CD|00703E|1C2720
+잉크 블랙|minimal|-|night|0E0F11|303337|E4E8EF|E7EBF3`.split('\n').map(line=>{
+  const [name,tone,temp,tg,...hx]=line.split('|'),[bg,sub,accent,text]=hx.map(h=>'#'+h),words=tg.split(' ').filter(Boolean);
+  const season=words.map(w=>OLD_SEASON[w]).find(Boolean)||null,theme=words.find(w=>USE[w])||null;
+  /* the hue the user would call "this palette's color": the bubble, or the accent when the bubble is near-neutral/dark */
+  const base=(['neon','dark','minimal'].includes(tone))?accent:sub;
+  const d=hueDiff(hexToHsl(sub)[0],hexToHsl(accent)[0]),rule=d<25?'shades':d<75?'analog':d>=150?'comp':'split';
+  return {name,base,rule,tags:{tone,temp:temp==='-'?null:temp,theme},season,roles:{base:bg,sub,accent,neutral:text},mode:isDark(bg)?'dark':'light',fresh:true};
+});
+const CURATED=[...CURATED_NEW,...CURATED_OLD];
+function curatedState(c){
+  const pal={base:c.base,rule:c.rule,tags:{...((S.pal&&S.pal.tags)||{tone:null,temp:null,theme:null})},look:{mood:c.tags.tone,int:'mid',adir:1,ah:0,temp:c.tags.temp},
+    locks:[false,false,false,false,false,false],curated:CURATED.indexOf(c),baseFixed:false};
+  pal.swatches=palFor(c.base,c.rule,{tone:c.tags.tone});pal.roles=c.roles?{...c.roles}:rolesFor(pal);
+  return {pal,mode:c.mode};
+}
+
+/* ---------- history ---------- */
+const HIST=[];
+const snap=()=>JSON.stringify({pal:S.pal,stroke:S.stroke,over:S.over,raw:S.raw,mode:S.mode,shape:S.shape,grad:S.grad});
+function restore(s){const o=JSON.parse(s);S.pal=o.pal;S.stroke={...o.stroke,pos:'inset'};S.over=o.over;S.raw=o.raw;S.mode=o.mode;S.shape=o.shape||'round';S.grad=cleanGrad(o.grad);}
+function push(){const s=snap();if(HIST[HIST.length-1]!==s){HIST.push(s);if(HIST.length>60)HIST.shift();}syncHist();}
+function undo(){const s=HIST.pop();if(!s)return;restore(s);closePop();render();syncHist();toast('되돌렸어요');}
+function syncHist(){$('#undoBtn').disabled=!HIST.length;$('#cmpBtn').disabled=!HIST.length;}
+
+/* ---------- recommendations: one base color → 7 moods × 6 accent styles × 3 intensities ----------
+   → readability is a hard filter → pick 6 with the diversity rules (review doc P2):
+   accents span ≥3 hue groups (30°+ apart) · weak/mid/strong each at least once · one dark look when no filter blocks it ·
+   near-duplicates (ΔL .02 · ΔC .015 · ΔH 8° on bg, bubble and accent) are dropped. */
+const METHODS=[['same','shades',1],['near','analog',1],['near','analog',-1],['opp','comp',1],['soft','split',1],['soft','split',-1]];
+let LAST_KEYS=new Set();
+function recPal(look,rule){
+  const pal={base:S.pal.base,rule,tags:{...S.pal.tags},look:{...look},locks:[...S.pal.locks],curated:-1,baseFixed:false};
+  pal.swatches=palFor(pal.base,rule,{tone:look.mood}).map((c,i)=>S.pal.locks[i]&&S.pal.swatches[i]?S.pal.swatches[i]:c);
+  pal.roles=rolesFor(pal);return pal;
+}
+function makeCand(look,rule,kind){
+  const pal=recPal(look,rule),mode=MOOD[look.mood].dark?'dark':'light';
+  const b=buildFrom({pal,stroke:S.stroke,over:{},raw:{},mode,grad:S.grad}),E=b.E;
+  if(checksFor(b,S.stroke).some(x=>x.g==='text'&&!x.ok))return null;          /* readability is a hard filter */
+  let score=(contrast(E.recv,E.bg)>=1.2?1:0)+(contrast(E.sent,E.recv)>=1.5?1:0)+(contrast(E.accent,E.bg)>=3?1:0);
+  const U=S.pal.tags.theme&&USE[S.pal.tags.theme];
+  if(U){const mi=U.moods.indexOf(look.mood);if(mi>=0)score+=1.6-mi*.35;if(U.acc.includes(kind))score+=.7;if(U.temp&&!S.pal.tags.temp&&look.temp===U.temp)score+=.3;}
+  const key=`${look.mood}|${kind}|${look.adir}|${look.int}`;
+  if(LAST_KEYS.has(key))score-=1.5;                                             /* 다시 추천 → new faces first */
+  return {pal,mode,E,kind,look,key,score:score+Math.random()*.9,bg:hexToOk(E.bg),sub:hexToOk(E.sent),acc:hexToOk(E.accent)};
+}
+const okNear=(a,b)=>Math.abs(a[0]-b[0])<.02&&Math.abs(a[1]-b[1])<.015&&(Math.max(a[1],b[1])<.03||hueDiff(a[2],b[2])<8);
+const isDup=(a,b)=>okNear(a.bg,b.bg)&&okNear(a.sub,b.sub)&&okNear(a.acc,b.acc);
+const accGroups=list=>{const g=[];list.forEach(c=>{if(!g.some(h=>hueDiff(h,c.acc[2])<30))g.push(c.acc[2]);});return g.length;};
+function pickDiverse(cands,n,o){
+  const picked=[];
+  while(picked.length<n&&cands.length){
+    let best=-1,bv=-1e9;
+    const groups=accGroups(picked),nd=picked.filter(p=>MOOD[p.look.mood].dark).length;
+    cands.forEach((c,i)=>{
+      if(picked.some(p=>isDup(p,c)))return;
+      let v=c.score;
+      if(picked.every(p=>hueDiff(p.acc[2],c.acc[2])>=30))v+=groups<3?3:.8;            /* accent hue spread */
+      if(!picked.some(p=>p.look.int===c.look.int))v+=2.2;                           /* weak · mid · strong */
+      const dk=!!MOOD[c.look.mood].dark;
+      if(!o.darkOnly){if(dk&&o.darkOk&&nd===0)v+=2.4;if(dk&&nd>=1)v-=5;}              /* exactly one dark look */
+      if(o.multiMood)v-=picked.filter(p=>p.look.mood===c.look.mood).length*1.5;
+      v-=picked.filter(p=>p.kind===c.kind).length*.7;
+      if(v>bv){bv=v;best=i;}
+    });
+    if(best<0)break;picked.push(cands.splice(best,1)[0]);
+  }
+  return picked;
+}
+function recommend(){
+  const T=S.pal.tags,moods=T.tone?[T.tone]:Object.keys(MOOD).filter(m=>!conflict(m,T.theme)),cands=[];
+  for(const mood of moods)for(const [kind,rule,adir] of METHODS)for(const int of Object.keys(INT)){
+    const c=makeCand({mood,int,adir,ah:0,temp:T.temp},rule,kind);if(c)cands.push(c);}
+  RECS=pickDiverse(cands,6,{darkOk:moods.some(m=>MOOD[m].dark),darkOnly:moods.every(m=>MOOD[m].dark),multiMood:moods.length>1});
+  LAST_KEYS=new Set(RECS.map(r=>r.key));recPicked=-1;renderRecs();
+}
+/* 비슷한 안 더: same mood — only intensity and the accent move */
+function similar(i){
+  const r=RECS[i],cands=[];
+  for(const [kind,rule,adir] of METHODS)for(const int of Object.keys(INT))for(const ah of [-14,0,14]){
+    if(kind===r.kind&&adir===r.look.adir&&int===r.look.int&&ah===(r.look.ah||0))continue;
+    const c=makeCand({...r.look,int,adir,ah},rule,kind);if(!c||isDup(c,r))continue;
+    c.score+=(kind===r.kind?1.2:0)+(int===r.look.int?.5:0);cands.push(c);}
+  RECS=[r,...pickDiverse(cands,5,{darkOk:false,darkOnly:true,multiMood:false})];recPicked=0;renderRecs();
+  toast(`같은 ${MOOD[r.look.mood].n} 무드에서 강도와 강조색만 바꿨어요`);
+}
+/* ---------- 배치 바꾸기: re-cast the current 6 swatches into background · my bubble · button ----------
+   Every (bg source k, bubble i, button j) is built and checked; unreadable ones are dropped, the rest are queued in a
+   shuffled, varied order so each click shows a different arrangement until the queue wraps. */
+let ARR={sig:'',queue:[],pos:0};
+function arrangements(){
+  const P=S.pal,sw=P.swatches,darkForm=isDark(P.roles.base||'#FFFFFF'),out=[];
+  for(let k=0;k<6;k++)for(let i=0;i<6;i++)for(let j=0;j<6;j++){
+    if(i===j)continue;const [,ck,hk]=hexToOk(sw[k]),bgH=hk,bgC=Math.min(ck*.35,darkForm?.03:.035);
+    const roles={base:darkForm?okToHex(.18,bgC,bgH):okToHex(.93,bgC,bgH),sub:sw[i],accent:sw[j],neutral:darkForm?okToHex(.94,.012,bgH):okToHex(.26,.02,bgH)};
+    const so=hexToOk(sw[i]),ao=hexToOk(sw[j]);
+    if(Math.abs(so[0]-ao[0])<.06&&(hueDiff(so[2],ao[2])<20||Math.max(so[1],ao[1])<.04))continue;   /* bubble and button must read as two colors */
+    const pal={...P,roles,curated:-1},b=buildFrom({pal,stroke:S.stroke,over:{},raw:{},mode:S.mode,grad:S.grad}),E=b.E;
+    if(checksFor(b,S.stroke).some(x=>x.g==='text'&&!x.ok))continue;
+    if(contrast(E.sent,E.recv)<1.35||contrast(E.sent,E.bg)<1.2)continue;                 /* my bubble must stand out */
+    let sc=(contrast(E.sent,E.recv)>=1.5?1:0)+(contrast(E.accent,E.bg)>=3?1:0)+ao[1]*4+Math.random()*.8;
+    if(roles.sub===P.roles.sub&&roles.accent===P.roles.accent)sc-=3;
+    out.push({k,i,j,roles,sc,E});}
+  /* order for variety: best first, then always change the bubble or button from the previous pick */
+  out.sort((a,b)=>b.sc-a.sc);const q=[];
+  const far=(c,l,strict)=>c.i!==l.i&&c.j!==l.j&&(!strict||(c.k!==l.k&&hueDiff(hexToOk(c.E.sent)[2],hexToOk(l.E.sent)[2])>=20));
+  while(out.length){const last=q[q.length-1];let n=last?out.findIndex(c=>far(c,last,true)):0;if(n<0)n=out.findIndex(c=>far(c,last,false));if(n<0)n=0;q.push(out.splice(n,1)[0]);}
+  return q.slice(0,24);
+}
+function arrange(){
+  const P=S.pal,sig=P.swatches.join()+S.mode+S.stroke.level;
+  if(ARR.sig!==sig){ARR={sig,queue:arrangements(),pos:0};}
+  if(!ARR.queue.length)return toast('이 팔레트로는 가독성을 지키는 다른 배치가 없어요');
+  const a=ARR.queue[ARR.pos%ARR.queue.length];ARR.pos++;
+  const n=ARR.queue.length,at=((ARR.pos-1)%n)+1;
+  push();P.roles={...a.roles};P.curated=-1;P.arr={k:a.k,i:a.i,j:a.j,at,n,sig:JSON.stringify(P.roles)};render();
+  toast(`배치 ${at}/${n} · 팔레트 안에서 바꿨어요${Object.keys(S.over).length?' (직접 고친 부위는 유지)':''}`,true);
+}
+document.addEventListener('click',e=>{if(e.target.closest('[data-arrange]'))arrange();});
+
+/* card copy: mood name + one line on what's different (no theory terms, no HEX) */
+function colorName(hex){const [h,s,l]=hexToHsl(hex);
+  if(s<.12||(l>.94&&s<.35))return l<.25?'먹색':l>.86?'미색':'회색';
+  if(h<14||h>=346)return l<.34?'와인':l>.62?'분홍':s<.45&&l>.5?'로즈':'빨강';
+  if(h<40)return l<.42?'갈색':l>.72?'살구':s<.4?'테라코타':'주황';
+  if(h<62)return l<.5?'겨자':'노랑';
+  if(h<92)return l<.36?'올리브':'연두';
+  if(h<150)return l<.3?'짙은 초록':'초록';
+  if(h<186)return '청록';
+  if(h<206)return '하늘';
+  if(h<238)return l<.3?'남색':'파랑';
+  if(h<258)return '남색';
+  if(h<288)return '보라';
+  if(h<322)return l>.74?'라일락':'자주';
+  return l>.7?'분홍':'자두';}
+const ro=w=>{const c=w.charCodeAt(w.length-1)-0xAC00;if(c<0||c>11171)return '로';const j=c%28;return j===0||j===8?'로':'으로';};
+function recCopy(r){const sN=colorName(r.E.sent),aN=colorName(r.E.accent);
+  return r.kind==='same'?[`${sN} 톤온톤`,`같은 ${sN} 계열로 차분하게 통일했어요`]
+    :r.kind==='near'?[`${aN} 이음`,`이웃한 ${aN}${ro(aN)} 자연스럽게 이어져요`]
+    :r.kind==='opp'?[`${aN} 포인트`,`버튼이 ${aN}${ro(aN)} 또렷하게 튀어요`]
+    :[`${aN} 살짝`,`${aN} 포인트가 부드럽게 대비돼요`];}
+function applyState(pal,mode){push();S.pal=JSON.parse(JSON.stringify(pal));S.pal.tags=normTags(S.pal.tags);S.mode=mode;S.over={};S.raw={};closePop();render();}
+
+/* ---------- bubble geometry ---------- */
+const SHAPES={round:{n:'둥근',radius:16,tailCorner:4,tailSize:6},square:{n:'각진',radius:6,tailCorner:1.5,tailSize:5},pill:{n:'알약',radius:99,tailCorner:99,tailSize:0}};
+const shape=()=>SHAPES[S.shape]||SHAPES.round;
+function bubblePath(w,h,isTail){
+  const SHAPE=shape(),m=Math.min(w,h)/2,r=Math.min(SHAPE.radius,m),t=SHAPE.tailSize;
+  if(!isTail||!t) return `M${r},0 H${w-r} A${r},${r} 0 0 1 ${w},${r} V${h-r} A${r},${r} 0 0 1 ${w-r},${h} H${r} A${r},${r} 0 0 1 0,${h-r} V${r} A${r},${r} 0 0 1 ${r},0 Z`;
+  const c=Math.min(SHAPE.tailCorner,m),span=t*1.4;
+  return `M${c},0 H${w-r} A${r},${r} 0 0 1 ${w},${r} V${h-r} A${r},${r} 0 0 1 ${w-r},${h} H${r} A${r},${r} 0 0 1 0,${h-r} V${span} Q${-t*.15},${span*.35} ${-t},0 H${c} Z`;
+}
+function insetPath(w,h,g,isTail){
+  const SHAPE=shape();if(!SHAPE.tailSize)isTail=false;const m=Math.min(w,h)/2,r=Math.max(Math.min(SHAPE.radius,m)-g,1),c=isTail?Math.max(Math.min(SHAPE.tailCorner,m)-g,1):r,x0=g,y0=g,x1=w-g,y1=h-g;
+  return `M${x0+c},${y0} H${x1-r} A${r},${r} 0 0 1 ${x1},${y0+r} V${y1-r} A${r},${r} 0 0 1 ${x1-r},${y1} H${x0+r} A${r},${r} 0 0 1 ${x0},${y1-r} V${y0+c} A${c},${c} 0 0 1 ${x0+c},${y0} Z`;
+}
+
+/* ---------- DOM ---------- */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const screen=$('#screen'),msgsEl=$('#msgs'),stage=$('#stage');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fgOn=c=>bestText(c,'#1B2130');
+
+const SAMPLES={
+  short:[{t:'date',text:'2026년 11월 12일 목요일'},{from:'r',text:'테마 시안 방금 받았어요!',time:'오후 2:14'},{from:'r',text:'배경은 지금 톤이 좋아요. 내 말풍선만 조금 더 진하게 가볼까요?',time:'오후 2:14'},{from:'s',text:'좋아요. 말풍선을 눌러서 바로 바꿔볼게요',time:'오후 2:15'},{from:'s',text:'면 · 글자 · 선을 따로 고를 수 있어요',time:'오후 2:15'},{from:'r',text:'선은 은은하게 넣어 주세요',time:'오후 2:16'},{from:'s',text:'확인 완료, 가독성 OK 떴어요',time:'오후 2:17',unread:'1'}],
+  long:[{t:'date',text:'2026년 11월 12일 목요일'},{from:'r',text:'회의록 정리해서 공유드려요. 이번 테마는 라이트와 다크를 한 쌍으로 내고, 기본은 라이트로 갑니다. 받은 말풍선은 흰색, 배경은 기준색을 한 단계 낮춘 톤이에요.',time:'오전 10:02'},{from:'s',text:'확인했어요. 다크 버전은 내 말풍선 명도를 따로 잡아야 받은 말풍선과 구분돼서, 자동 조정이 들어간 상태로 비교해 보고 다시 말씀드릴게요. 긴 문단에서도 줄 간격이 괜찮은지 같이 볼게요.',time:'오전 10:05'},{from:'r',text:'좋아요. 시간 글자 대비도 꼭 봐 주세요.',time:'오전 10:06'},{from:'s',text:'네, 4.5:1 기준으로 맞출게요.',time:'오전 10:06',unread:'1'}],
+  emoji:[{t:'date',text:'2026년 11월 12일 목요일'},{from:'r',text:'🎉🎉 시안 최고예요!!',time:'오후 6:01'},{from:'r',text:'레퍼런스 👉 <a>color-guide.example</a>',time:'오후 6:01',html:true},{from:'s',text:'고마워요 😊',time:'오후 6:02'},{from:'s',text:'링크 밑줄 색도 확인해 주세요 🔗 <a>theme-preview.example</a>',time:'오후 6:02',html:true},{from:'r',text:'👍',time:'오후 6:03'},{from:'s',text:'🫶✨',time:'오후 6:03',unread:'1'}]
+};
+let MSGS=JSON.parse(JSON.stringify(SAMPLES.short));
+
+function renderMsgs(){
+  let html='';
+  MSGS.forEach((m,i)=>{
+    if(m.t==='date'){html+=`<div class="date" data-part="meta">${m.text}</div>`;return;}
+    const prev=MSGS[i-1],next=MSGS[i+1],first=!prev||prev.from!==m.from,last=!next||next.from!==m.from,side=m.from;
+    html+=`<div class="row ${side}${first?' grp':''}">`;
+    if(side==='r') html+=first?`<div class="avatar" data-part="sent">하</div>`:`<div class="av-spacer"></div>`;
+    html+=`<div class="col">${side==='r'&&first?`<div class="sender" data-part="meta">디자인팀 하린</div>`:''}`;
+    html+=`<div class="line"><div class="bub" data-part="${side==='s'?'sent':'recv'}" data-tail="${first?1:0}" data-side="${side}"><svg aria-hidden="true" data-i="${i}"></svg><span class="tx">${m.html?m.text:esc(m.text)}</span></div>`;
+    if(last||m.unread) html+=`<div class="meta" data-part="meta">${m.unread?`<span class="unread" data-part="accent">${m.unread}</span>`:''}${last?`<span>${m.time}</span>`:''}</div>`;
+    html+=`</div></div></div>`;
+  });
+  msgsEl.innerHTML=html;drawBubbles();
+}
+function drawBubbles(){
+  const E=B.E,st=S.stroke,on=st.level!=='none';
+  $$('.bub').forEach(b=>{
+    const w=b.offsetWidth,h=b.offsetHeight,sent=b.dataset.side==='s',isTail=b.dataset.tail==='1';
+    const svg=b.firstElementChild,id='b'+svg.dataset.i,flip=sent?`translate(${w},0) scale(-1,1)`:'';
+    const d=bubblePath(w,h,isTail),g=B.G[sent?'sent':'recv'];
+    svg.setAttribute('width',w);svg.setAttribute('height',h);
+    /* everything is drawn inside the flipped group; positions are mirrored back so a sent bubble shows the same direction */
+    let defs=`<clipPath id="c${id}"><path d="${d}"/></clipPath>`,body;
+    if(!g)body=`<path d="${d}" fill="${sent?E.sent:E.recv}"/>`;
+    else if(g.type==='linear'){const [x1,y1,x2,y2]=lineEnds(g.angle,w,h,sent);
+      defs+=`<linearGradient id="g${id}" gradientUnits="userSpaceOnUse" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}">${g.stops.map(s=>`<stop offset="${s.at}" stop-color="${s.c}"/>`).join('')}</linearGradient>`;
+      body=`<path d="${d}" fill="url(#g${id})"/>`;}
+    else if(g.type==='radial'){const cx=sent?1-g.center[0]:g.center[0];
+      defs+=`<radialGradient id="g${id}" cx="${cx}" cy="${g.center[1]}" r="${radR(g.center)}">${g.stops.map(s=>`<stop offset="${s.at}" stop-color="${s.c}"/>`).join('')}</radialGradient>`;
+      body=`<path d="${d}" fill="url(#g${id})"/>`;}
+    else{ /* mesh: soft circles (opaque center → transparent edge) layered over the base, clipped to the bubble */
+      const circles=g.points.map((p,j)=>{const px=(sent?1-p.x:p.x)*w,py=p.y*h,R=g.spread*Math.hypot(Math.max(p.x,1-p.x)*w,Math.max(p.y,1-p.y)*h);
+        defs+=`<radialGradient id="m${id}_${j}"><stop offset="0" stop-color="${p.c}"/><stop offset="1" stop-color="${p.c}" stop-opacity="0"/></radialGradient>`;
+        return `<circle cx="${px}" cy="${py}" r="${R}" fill="url(#m${id}_${j})"/>`;}).reverse().join('');
+      body=`<path d="${d}" fill="${g.base}"/><g clip-path="url(#c${id})">${circles}</g>`;}
+    /* inner stroke: the bubble's own outline at double width, clipped to the bubble, so it only grows inward */
+    const line=on?`<path d="${d}" fill="none" stroke="${sent?E.sentline:E.recvline}" stroke-width="${+st.width*2}" stroke-linejoin="round" clip-path="url(#c${id})"/>`:'';
+    svg.innerHTML=`<defs>${defs}</defs><g transform="${flip}">${body}${line}</g>`;
+  });
+}
+function applyVars(){
+  for(const k in B.C) screen.style.setProperty('--c-'+k,B.E[k]||B.C[k]);
+  screen.style.backgroundImage=B.G.bg?B.G.bg.css:'none';
+  screen.style.setProperty('--c-accentimg',B.G.accent?B.G.accent.css:'none');
+  const r=document.documentElement.style;r.setProperty('--blob1',B.R.sub);r.setProperty('--blob3',B.R.accent);
+}
+
+/* ---------- left panel ---------- */
+const LOCK_ON='<path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="5" y="11" width="14" height="9" rx="2"/>';
+const LOCK_OFF='<path d="M7 11V8a5 5 0 0 1 9.6-2"/><rect x="5" y="11" width="14" height="9" rx="2"/>';
+$('[data-tag="tone"]').innerHTML=Object.entries(MOOD).map(([k,v])=>`<button class="chip" type="button" data-v="${k}">${v.n}</button>`).join('');
+$('[data-tag="temp"]').innerHTML=Object.entries(TEMPS).map(([k,v])=>`<button class="chip" type="button" data-v="${k}" title="기준색은 그대로, 배경과 글자만 ${v.n}">${v.n}</button>`).join('');
+$('[data-tag="theme"]').innerHTML=Object.entries(USE).map(([k,v])=>`<button class="chip" type="button" data-v="${k}" title="잘 어울리는 무드: ${v.moods.map(m=>MOOD[m].n).join(' · ')}">${v.n}</button>`).join('');
+function renderLeft(){
+  const P=S.pal,on=S.stroke.level!=='none';
+  $$('[data-tag]').forEach(g=>g.querySelectorAll('.chip').forEach(b=>{const ax=g.dataset.tag,v=b.dataset.v;b.setAttribute('aria-pressed',String(P.tags[ax]===v));
+    const off=ax==='tone'?conflict(v,P.tags.theme):ax==='theme'?conflict(P.tags.tone,v):false;b.setAttribute('aria-disabled',String(off));if(off)b.title='지금 고른 무드·용도와 어울리지 않아요';}));
+  $('#baseColor').value=P.base.toLowerCase();$('#baseHex').value=P.base;$('#baseSw').style.background=P.base;
+  $('#baseFix').innerHTML=P.baseFixed?`<span class="basefix"><i style="background:${P.base}"></i>기준색 ${P.base} 그대로${(P.tags.tone||P.tags.temp)?' · 무드·온도는 추천에만':''}<button type="button" id="unfix" aria-label="기준색 고정 해제" title="고정 해제 (무드·온도를 팔레트에도 적용)">✕</button></span>`:'';
+  $('#rules').innerHTML=RULES.map(([r,n,d])=>`<button class="rule" type="button" data-rule="${r}" aria-pressed="${P.rule===r}" title="${d}"><span class="bar">${palOf(P,r).map(c=>`<i style="background:${c}"></i>`).join('')}</span>${n}</button>`).join('');
+  const map=LINE_MAP[P.rule];
+  $('#strip').innerHTML=P.swatches.map((c,i)=>{
+    let ln='';if(on){if(map[0]===i)ln+='<em class="tag">받은 선</em>';if(map[1]===i)ln+='<em class="tag">내 선</em>';}
+    const A=P.arr&&P.arr.sig===JSON.stringify(P.roles)?P.arr:null;
+    if(A){if(A.k===i)ln+='<em class="tag role">배경</em>';if(A.i===i)ln+='<em class="tag role">말풍선</em>';if(A.j===i)ln+='<em class="tag role">버튼</em>';}
+    return `<div class="sw" style="background:${c};color:${fgOn(c)}"><button class="lock" type="button" data-lock="${i}" aria-pressed="${P.locks[i]}" aria-label="${c} 잠그기" title="잠그면 다시 추천·섞기에도 남아요"><svg viewBox="0 0 24 24">${P.locks[i]?LOCK_ON:LOCK_OFF}</svg></button><div class="lab">${ln}<span>${c.slice(1)}</span></div></div>`;}).join('');
+  {const A=P.arr&&P.arr.sig===JSON.stringify(P.roles)?P.arr:null;$('#arrNote').textContent=A?`배치 ${A.at}/${A.n} · ${A.k+1}번 칸 배경 · ${A.i+1}번 말풍선 · ${A.j+1}번 버튼`:'누를 때마다 위 6색으로 배경·말풍선·버튼을 다르게 짜요';}
+  $('#stripNote').textContent=on?`선은 ${map[0]+1}번째 칸(받은 선)과 ${map[1]+1}번째 칸(내 선)을 써요. 잠근 칸은 다시 추천해도 남습니다.`:'잠근 칸은 다시 추천·섞기를 해도 남아요. 선을 켜면 이 중 두 칸이 선 색이 됩니다.';
+  renderLib();
+}
+function renderRecs(){
+  const P=S.pal,lab=tagLabel(P.tags);
+  $('#recNote').textContent=`기준색 ${P.base} · ${lab||'7가지 무드'}에서 서로 다른 6안을 골랐어요. 모두 글자 대비 AA를 통과했고, 누르면 적용 · 되돌리기로 복귀해요.`;
+  $('#recs').innerHTML=RECS.map((r,i)=>{const E=r.E,[t,line]=recCopy(r),M=MOOD[r.look.mood];
+    return `<div class="rec" aria-pressed="${i===recPicked}">
+    <button class="apply" type="button" data-rec="${i}" aria-label="${M.n} ${t} 적용" title="배경 ${E.bg} · 내 말풍선 ${E.sent} · 강조 ${E.accent}"><span class="mini" style="background:${E.bg}">
+      <i class="mh" style="background:${E.header};color:${E.headtext}">Aa 대화방</i>
+      <i class="mb"><i class="bub mr" style="background:${E.recv};color:${E.recvtext}"><b></b><b></b></i><i class="bub ms" style="background:${E.sent};color:${E.senttext}"><b></b></i></i>
+      <i class="mi" style="background:${E.header};color:${E.headtext}"><i class="mbtn" style="background:${E.accent};color:${E.sendicon}">전송</i></i></span>
+    <span class="rt">${t}</span><span class="rl">${line}</span>
+    <span class="rbadge"><em class="md">${M.n}</em><em>${INT[r.look.int].n}</em><em class="aa">AA</em></span></button>
+    <button class="more" type="button" data-sim="${i}">비슷한 안 더</button></div>`;}).join('');
+}
+const LIB_COL=[['match','맞춤'],['all','전체'],['spring','봄'],['summer','여름'],['autumn','가을'],['winter','겨울'],['dark','다크']];
+function renderLib(){
+  const t=S.pal.tags,[,bc,bh]=hexToOk(S.pal.base);
+  const near=c=>{const [,cc,ch]=hexToOk(c.base);return (bc<.03||cc<.03)?90:hueDiff(bh,ch);};
+  let list=CURATED.map((c,i)=>({c,i}));
+  if(libSort==='match'){list=list.filter(({c})=>(!t.tone||c.tags.tone===t.tone)&&(!t.theme||c.tags.theme===t.theme)).sort((a,b)=>near(a.c)-near(b.c));}
+  else if(libSort==='dark')list=list.filter(x=>x.c.mode==='dark');
+  else if(libSort!=='all')list=list.filter(x=>x.c.season===libSort);
+  const empty=!list.length;if(empty)list=CURATED.map((c,i)=>({c,i})).sort((a,b)=>near(a.c)-near(b.c));
+  $('#libCount').textContent=`${list.length}/${CURATED.length}`;
+  $('#libNote').textContent=libSort==='match'?(empty?'고른 무드·용도에 맞는 조합이 없어 기준색과 가까운 순으로 보여 드려요.':`${tagLabel({tone:t.tone,theme:t.theme})?tagLabel({tone:t.tone,theme:t.theme})+' · ':''}기준색과 색이 가까운 순`):libSort==='all'?'전체 조합 · 필터와 무관해요':'';
+  $('#libNote').hidden=!$('#libNote').textContent;
+  const shown=libAll?list:list.slice(0,8);
+  $('#curated').innerHTML=shown.map(({c,i})=>{const st=curatedState(c),b=buildFrom({pal:st.pal,stroke:{level:'none',pos:'outline',width:1},over:{},raw:{},mode:st.mode}),E=b.E;
+    return `<button class="combo" type="button" data-i="${i}" aria-pressed="${S.pal.curated===i}"><span class="bars"><i style="flex:5;background:${E.bg}"></i><i style="flex:2;background:${E.recv};box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)"></i><i style="flex:3;background:${E.sent}"></i><i style="flex:1;background:${E.accent}"></i></span><b>${c.name}</b><small>${[MOOD[c.tags.tone]&&MOOD[c.tags.tone].n,c.tags.theme&&USE[c.tags.theme].n].filter(Boolean).join(' · ')}</small></button>`;}).join('');
+  $('#libMore').hidden=list.length<=8;$('#libMore').textContent=libAll?'접기':`${list.length-8}개 더 보기`;
+  $('#libSort').innerHTML=LIB_COL.map(([k,n])=>`<button type="button" data-v="${k}" aria-pressed="${k===libSort}">${n}</button>`).join('');
+}
+
+/* ---------- readability ---------- */
+function checksFor(b,stroke){
+  const {C,E}=b,G=b.G||{},on=stroke.level!=='none',outline=on&&stroke.pos==='outline',m=LEVELS[stroke.level].min;
+  /* a surface is either a solid color or a gradient: text is tested against BOTH ends (lower value counts),
+     surface-to-surface separation uses the gradient's average */
+  /* a surface is a solid color or a gradient sampled on a 5×3 grid: text uses the LOWEST contrast over the samples,
+     surface-to-surface separation uses the sample average */
+  const surf=(k,solid)=>G[k]?{ends:G[k].samples,avg:G[k].avg,css:G[k].css}:{ends:[solid],avg:solid,css:solid};
+  const sR=surf('recv',E.recv),sS=surf('sent',E.sent),sB=surf('bg',C.bg),sA=surf('accent',C.accent);
+  const fx=(k,against,fallback)=>G[k]?()=>fixGradPart(k,against,b):fallback;   /* gradient first, solid colors second */
+  const gw=k=>G[k]?` · ${GTYPES[G[k].type]} ${G[k].samples.length}지점 중 최저`:'';
+  const L=[
+    {g:'text',n:'받은 말풍선 글자',fg:E.recvtext,s:sR,min:4.5,why:'AA 4.5:1'+gw('recv'),fix:fx('recv',E.recvtext,()=>S.over.recvtext=ensureContrast(E.recvtext,E.recv,4.5))},
+    {g:'text',n:'내 말풍선 글자',fg:E.senttext,s:sS,min:4.5,why:'AA 4.5:1'+gw('sent'),fix:fx('sent',E.senttext,()=>S.over.senttext=ensureContrast(E.senttext,E.sent,4.5))},
+    {g:'text',n:'상단 글자',fg:C.headtext,s:surf('',C.header),min:4.5,why:'AA 4.5:1',fix:()=>S.over.headtext=ensureContrast(C.headtext,C.header,4.5)},
+    {g:'text',n:'보조 글자 (10px)',fg:C.meta,s:sB,min:4.5,why:'작은 글자 AA 4.5:1'+gw('bg'),fix:fx('bg',C.meta,()=>S.over.meta=ensureContrast(C.meta,C.bg,4.5))},
+    {g:'text',n:'보내기 버튼',fg:C.header,s:sA,min:3,why:'UI 요소 3:1'+gw('accent'),sample:'btn',fix:fx('accent',C.header,()=>S.over.accent=ensureContrast(C.accent,C.header,3))},
+    {g:'area',n:'받은 말풍선 ↔ 배경',fg:sR.avg,bg:sB.avg,min:1.2,why:outline?'테두리 선이 있어 면제':'1.2:1 권장 (경험적)'+(G.recv||G.bg?' · 평균색':''),exempt:outline,fix:()=>{if(G.recv)fixGradPart('recv',sB.avg,b);if(G.bg)fixGradPart('bg',sR.avg,b);if(!G.recv&&!G.bg){delete S.raw.bg;S.over.bg=ensureAway(C.bg,C.recv,1.25);}}},
+    {g:'area',n:'내 ↔ 받은 말풍선',fg:sS.avg,bg:sR.avg,min:1.5,why:'1.5:1 권장 · 흑백 위계'+(G.sent||G.recv?' · 평균색':''),fix:()=>{if(G.sent)fixGradPart('sent',sR.avg,b);if(G.recv)fixGradPart('recv',sS.avg,b);if(!G.sent&&!G.recv){delete S.raw.sent;S.over.sent=ensureAway(C.sent,C.recv,LEVELS[stroke.level].emph==='fill'?1.55:2.4);}}},
+    {g:'area',n:'안읽음 숫자 ↔ 배경',fg:C.accent,bg:sB.avg,min:3,why:'작은 상태 표시 3:1'+(G.bg?' · 평균색':''),fix:fx('bg',C.accent,()=>S.over.accent=ensureContrast(C.accent,C.bg,3))}
+  ];
+  /* grayscale hierarchy: the lightest AND darkest sample of my gradient must both stay apart from the received bubble */
+  if(G.sent)L.push({g:'area',n:'흑백 위계 · 내 그라데이션 명암 끝',fg:G.sent.light,bg:sR.avg,min:1.25,why:'가장 밝은·어두운 지점 모두 받은 말풍선과 1.25:1 이상',
+    r2:Math.min(contrast(G.sent.light,sR.avg),contrast(G.sent.dark,sR.avg)),fix:()=>fixGradPart('sent',sR.avg,b)});
+  if(on){const vs=side=>outline?sB.avg:(side==='s'?sS.avg:sR.avg),why=`${m}:1 제안값 (WCAG 아님)`;
+    L.push({g:'line',n:`받은 선 ↔ ${outline?'배경':'말풍선'}`,fg:E.recvline,bg:vs('r'),min:m,why,fix:()=>S.over.recvline=softFix(E.recvline,vs('r'),m)},
+           {g:'line',n:`내 선 ↔ ${outline?'배경':'말풍선'}`,fg:E.sentline,bg:vs('s'),min:m,why,fix:()=>S.over.sentline=softFix(E.sentline,vs('s'),m)});}
+  return L.map(x=>{
+    const r=x.r2!=null?x.r2:x.s?Math.min(...x.s.ends.map(e=>contrast(x.fg,e))):contrast(x.fg,x.bg);
+    return {...x,bg:x.bg||x.s.avg,bgCss:x.s?x.s.css:x.bg,r,ok:x.exempt||r>=x.min};});
+}
+function renderChecks(){
+  const L=checksFor(B,S.stroke),bad=L.filter(x=>!x.ok);
+  $('#badge').className='badge '+(bad.length?'warn':'ok');
+  $('#badge').innerHTML=bad.length
+    ?`<span class="dot"><svg viewBox="0 0 24 24"><path d="M12 8v5M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg></span><div><b>${bad.length}곳 확인 필요</b><span>${bad.map(x=>x.n).slice(0,2).join(', ')}${bad.length>2?' 외':''}</span></div><button class="btn dark" id="autoFix" type="button">자동 수정</button>`
+    :`<span class="dot"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><b>가독성 OK</b><span>${S.mode==='dark'?'다크':'라이트'} · 글자 · 말풍선 구분${S.stroke.level!=='none'?' · 선':''} 기준 충족</span></div>`;
+  const smp=x=>x.g==='area'?`<span class="sample" style="background:${x.bg}"><i style="display:block;width:18px;height:12px;border-radius:5px;background:${x.fg}"></i></span>`:x.g==='line'?`<span class="sample" style="background:${x.bg}"><i style="display:block;width:18px;height:10px;border-radius:4px;border:2px solid ${x.fg}"></i></span>`
+    :x.sample==='btn'?`<span class="sample" style="background:${x.fg}"><i style="display:block;width:16px;height:16px;border-radius:50%;background:${x.bgCss}"></i></span>`:`<span class="sample" style="background:${x.bgCss};color:${x.fg}">가</span>`;
+  const pill=x=>x.exempt?'<span class="pill info">면제</span>':x.g==='text'?`<span class="pill ${x.ok?'ok':'bad'}">${x.ok?'통과':'부족'}</span>`:`<span class="pill ${x.ok?'ok':'weak'}">${x.ok?'구분 좋음':'구분 약함'}</span>`;
+  const row=x=>`<div class="check${x.g==='text'?'':' area'}">${smp(x)}<span>${x.n}<br><small>${x.why}</small></span><b>${x.r.toFixed(2)}:1</b>${pill(x)}</div>`;
+  const grp=(g,t)=>{const xs=L.filter(x=>x.g===g);return xs.length?`<div class="chk-h">${t}</div>`+xs.map(row).join(''):'';};
+  $('#checks').innerHTML=grp('text','글자 · WCAG')+grp('area','면 구분 · 참고 기준')+grp('line','말풍선 선');
+  $('#readPill').className='read-pill '+(bad.length?'warn':'ok');
+  $('#readPill').innerHTML=bad.length?`<i><svg viewBox="0 0 24 24"><path d="M12 7v6M12 17h.01"/></svg></i>${bad.length}곳 확인 필요<small>보기</small>`:`<i><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i>가독성 OK`;
+  $('#finishDot').hidden=!bad.length;
+}
+/* side panel steps: each tab keeps its own scroll position */
+const stepScroll={pick:0,finish:0};let curStep='pick';
+function setStep(k){if(k===curStep)return;const body=$('#sideBody');stepScroll[curStep]=body.scrollTop;curStep=k;
+  $$('.side-tabs [data-step]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.step===k)));
+  $('#panelPick').hidden=k!=='pick';$('#panelFinish').hidden=k!=='finish';body.scrollTop=stepScroll[k];}
+$('.side-tabs').addEventListener('click',e=>{const b=e.target.closest('[data-step]');if(b)setStep(b.dataset.step);});
+$('.side-tabs').addEventListener('keydown',e=>{if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;const k=curStep==='pick'?'finish':'pick';setStep(k);$(`.side-tabs [data-step="${k}"]`).focus();});
+document.addEventListener('click',e=>{const g=e.target.closest('[data-goto]');if(g)setStep(g.dataset.goto);});
+$('#readPill').addEventListener('click',()=>{setStep('finish');$('#sideBody').scrollTop=0;const d=$('#panelFinish details.acc');if(d)d.open=true;});
+/* gradient auto-fix (plan §5), so a gradient is not flattened into one color:
+   1) pull only the worst point/stop toward the base, 2) then reduce the mesh spread, 3) then drop that point (min 2 colors) */
+function fixGradPart(k,against,b){
+  const p=S.grad.parts[k];if(!p||!p.on)return;
+  const g=buildFrom(S).G[k];if(!g)return;   /* fresh: an earlier fix in the same pass may already have changed this part */
+  const mesh=p.type==='mesh',items=mesh?p.points:p.stops.slice(1),cols=mesh?g.points.map(x=>x.c):g.stops.slice(1).map(x=>x.c);
+  if(!items.length)return;
+  let wi=0;cols.forEach((c,i)=>{if(contrast(c,against)<contrast(cols[wi],against))wi=i;});
+  const it=items[wi];
+  if((it.pull||0)<.7){it.pull=Math.min(1,(it.pull||0)+.35);return;}
+  if(mesh&&p.spread>.3){p.spread=Math.max(.3,+(p.spread-.15).toFixed(2));return;}
+  if(mesh?items.length>2:items.length>1){
+    if(mesh)p.points.splice(wi,1);
+    else{p.stops.splice(wi+1,1);p.stops.forEach((s,i)=>s.at=+(i/(p.stops.length-1)).toFixed(3));}   /* stop 0 is never removed */
+    return;}
+  /* last resort: anchor on the part's own (already hierarchy-safe) color */
+  if(mesh&&p.base!=='self'){p.base='self';return;}
+  if(!mesh&&p.stops[0].ref!=='self'){p.stops[0].ref='self';return;}
+  it.pull=1;
+}
+function autoFix(){
+  push();
+  for(let p=0;p<16;p++){const bad=checksFor(B,S.stroke).filter(x=>!x.ok);if(!bad.length)break;bad.forEach(x=>x.fix());B=buildFrom(S);}
+  render();const left=checksFor(B,S.stroke).filter(x=>!x.ok).length;
+  toast(left?`${left}곳은 자동으로 못 고쳤어요. 해당 부위를 눌러 직접 바꿔 주세요`:'자동 수정했어요',true);
+}
+
+/* ---------- edited parts ---------- */
+const KEYNAME={bg:'채팅 배경',header:'상단 · 입력바',headtext:'상단 글자',recv:'받은 말풍선',recvtext:'받은 글자',recvline:'받은 선',sent:'내 말풍선',senttext:'내 글자',sentline:'내 선',accent:'강조색',meta:'보조 글자',avatar:'프로필 배경'};
+function renderEdits(){
+  const keys=[...new Set([...Object.keys(S.over),...Object.keys(S.raw).filter(k=>S.raw[k])])];
+  $('#editCount').textContent=keys.length?`· ${keys.length}`:'';
+  $('#resetOver').hidden=!keys.length;
+  $('#edits').innerHTML=keys.length?keys.map(k=>`<span class="edit"><i style="background:${B.C[k]}"></i>${KEYNAME[k]||k}${S.raw[k]?' (원색)':''}<button type="button" data-unedit="${k}" aria-label="${KEYNAME[k]} 자동으로">✕</button></span>`).join(''):'<p class="note">아직 없어요. 미리보기에서 부위를 눌러 바꾸면 여기에 모여요.</p>';
+}
+
+/* ---------- click editing by part (fill / text / line) ---------- */
+const PARTS={
+  bg:{name:'채팅 배경',tabs:{fill:'bg'},links:[['header','상단 · 입력바','배경 톤을 따라가요']]},
+  header:{name:'상단 · 입력바',tabs:{fill:'header',text:'headtext'}},
+  recv:{name:'받은 말풍선',tabs:{fill:'recv',text:'recvtext',line:'recvline'}},
+  sent:{name:'내 말풍선',tabs:{fill:'sent',text:'senttext',line:'sentline'},links:[['avatar','프로필 배경','내 말풍선 톤을 따라가요']]},
+  accent:{name:'강조색',tabs:{fill:'accent'},fixed:'보내기 버튼 · 안읽음 숫자 (강조는 두 곳만)'},
+  meta:{name:'보조 글자',tabs:{text:'meta'},sub:'시간 · 이름 · 날짜'}
+};
+const TABN={fill:'면',text:'글자',line:'선'};
+const ROLES_G=[['base','배경 역할'],['sub','내 말풍선 역할'],['accent','강조 역할'],['neutral','글자 역할']];
+const TEXT_BG={headtext:()=>B.C.header,recvtext:()=>B.E.recv,senttext:()=>B.E.sent,meta:()=>B.C.bg};
+let pop={part:null,tab:null};
+function partOf(el){const p=el.closest('[data-part]');return p?p.dataset.part:null;}
+function openPop(part,ev){
+  pop={part,tab:Object.keys(PARTS[part].tabs)[0]};
+  const el=$('#pop');el.hidden=false;fillPop();
+  const sr=stage.getBoundingClientRect(),pw=el.offsetWidth,ph=el.offsetHeight;
+  let x=ev.clientX-sr.left-pw/2,y=ev.clientY-sr.top+14;
+  x=clamp(x,0,Math.max(0,sr.width-pw));if(y+ph>sr.height)y=Math.max(0,ev.clientY-sr.top-ph-14);
+  el.style.left=(x+stage.scrollLeft)+'px';el.style.top=(y+stage.scrollTop)+'px';
+}
+function closePop(){$('#pop').hidden=true;pop={part:null,tab:null};}
+function suggestions(part){
+  const R=B.R,C=B.C,[h,s]=hexToHsl(R.sub);
+  return ({
+    bg:[['역할 배경',R.base],['흰빛',mix(R.base,'#FFFFFF',.6)],['기준색 옅게',hslToHex(h,s*.5,.9)]],
+    header:[['배경과 같게',C.bg],['흰색','#FFFFFF'],['배경보다 밝게',mix(C.bg,'#FFFFFF',.55)]],
+    recv:[['흰색','#FFFFFF'],['배경 톤',mix(C.bg,'#FFFFFF',.6)],['내 말풍선 톤',mix(C.sent,'#FFFFFF',.8)]],
+    sent:[['기본',R.sub],['강조색',R.accent],['진하게',hslToHex(h,Math.min(1,s+.1),.45)]],
+    accent:[['기본',R.accent],['내 말풍선색',C.sent],['진하게',ensureContrast(R.accent,'#FFFFFF',4.5)]]
+  })[part]||[];
+}
+function textCands(key){
+  const bg=TEXT_BG[key](),R=B.R,[h]=hexToHsl(R.base);
+  const pool=[R.neutral,'#FFFFFF','#111418',hslToHex(h,.25,.2),hslToHex(h,.2,.95),hslToHex(h,.15,.35),...S.pal.swatches];
+  return [...new Set(pool)].map(c=>({c,r:contrast(c,bg)})).filter(x=>x.r>=4.5).sort((a,b)=>b.r-a.r).slice(0,6);
+}
+function fillPop(){
+  const P=PARTS[pop.part],key=P.tabs[pop.tab],on=S.stroke.level!=='none',cur=B.E[key]||B.C[key];
+  $('#popTitle').innerHTML=`${P.name}<small>${P.sub||'클릭한 부위만 바뀌어요'}</small>`;
+  $('#popTabs').innerHTML=Object.keys(P.tabs).map(t=>`<button type="button" role="tab" data-tab="${t}" aria-selected="${t===pop.tab}">${TABN[t]}</button>`).join('');
+  let h='';
+  if(pop.tab==='line'&&!on){
+    h=`<p class="note">말풍선 선이 꺼져 있어요.</p><button class="btn dark" type="button" data-act="lineon">선 켜기 (은은하게)</button>`;
+  }else if(pop.tab==='text'){
+    const bg=TEXT_BG[key](),r=contrast(cur,bg);
+    h+=`<div class="pop-lab">쓸 수 있는 색 (4.5:1 이상)</div><div class="sugg">${textCands(key).map(x=>`<button type="button" data-set="${x.c}" aria-pressed="${x.c===cur}"><i style="background:${x.c}"></i>${x.c}<em>${x.r.toFixed(1)}</em></button>`).join('')}</div>`;
+    h+=`<div class="pop-row"><span class="swatch-in" style="background:${cur}"><input type="color" data-custom value="${cur.toLowerCase()}" aria-label="글자 색 직접 고르기"></span><code>${cur}</code></div>`;
+    if(r<4.5)h+=`<div class="notice warn">부족 · ${r.toFixed(1)}:1 (4.5:1 필요)<button class="btn sm" type="button" data-set="${ensureContrast(cur,bg,4.5)}">가장 가까운 통과 색</button></div>`;
+  }else if(pop.tab==='fill'&&GPARTS.includes(pop.part)&&S.grad.parts[pop.part].on){
+    /* gradient: the popover only picks the TYPE; detailed editing happens in the drawer */
+    const gp=S.grad.parts[pop.part],g=B.G[pop.part];
+    h+=typeSeg(pop.part);
+    if(g)h+=`<div class="gpreview" style="background:${g.css}"></div><p class="note">${GTYPES[gp.type]} · ${g.colors.length}색${gp.type==='linear'?` · ${gp.angle}°`:''} — 색은 모두 팔레트·역할색에서 와요.</p>`;
+    h+=`<button class="btn dark" type="button" data-act="drawer">편집 열기</button>`;
+  }else{
+    if(pop.tab==='fill'&&GPARTS.includes(pop.part))h+=typeSeg(pop.part);
+    h+=`<div class="pop-lab">팔레트</div><div class="pop-sw">${S.pal.swatches.map((c,i)=>`<button type="button" data-set="${c}" style="background:${c}" aria-pressed="${c===cur}" aria-label="팔레트 ${i+1}번째 ${c}"></button>`).join('')}</div>`;
+    if(pop.tab==='fill'){const sg=suggestions(pop.part);if(sg.length)h+=`<div class="pop-lab">이 부위 추천</div><div class="sugg">${sg.map(([n,c])=>`<button type="button" data-set="${c}" aria-pressed="${c===cur}"><i style="background:${c}"></i>${n}</button>`).join('')}</div>`;}
+    h+=`<div class="pop-row"><span class="swatch-in" style="background:${cur}"><input type="color" data-custom value="${cur.toLowerCase()}" aria-label="직접 고르기"></span><code>${cur}</code></div>`;
+    if(pop.tab==='fill'&&(key==='bg'||key==='sent')){
+      const picked=B.pick[key],applied=B.C[key];
+      if(S.raw[key])h+=`<div class="notice adj">원색 그대로 쓰는 중이에요. 위계가 약해질 수 있어요.<button class="btn sm" type="button" data-act="unraw">자동 조정 다시 켜기</button></div>`;
+      else if(picked!==applied)h+=`<div class="notice adj">가독성과 위계를 위해 조정했어요.<span class="pair"><i style="background:${picked}"></i>${picked} → <i style="background:${applied}"></i>${applied}</span><button class="btn sm" type="button" data-act="raw">원색 그대로 쓰기</button></div>`;
+    }
+  }
+  if(pop.tab==='fill'){
+    if(P.links)h+=`<div class="links">함께 바뀜: ${P.links.map(([k,n])=>S.over[k]?`<span class="lk">${n} · 따로 고정됨 <button type="button" data-relink="${k}">다시 연결</button></span>`:`<span class="lk">${n} <button type="button" data-unlink="${k}">여기만 바꾸기</button></span>`).join('')}</div>`;
+    else if(P.fixed)h+=`<div class="links">함께 바뀜: <span class="lk">${P.fixed}</span></div>`;
+    else h+=`<div class="links">함께 바뀜: 없음</div>`;
+  }
+  const gp=GPARTS.includes(pop.part)&&pop.tab==='fill'?S.grad.parts[pop.part]:null,gEdited=gp&&gp.on;
+  const edited=S.over[key]||S.raw[key]||gEdited;
+  h+=`<button class="btn sm" type="button" data-act="auto" ${edited?'':'disabled'} style="align-self:flex-start">자동으로 되돌리기</button>`;
+  $('#popBody').innerHTML=h;
+}
+/* 단색 · 선형 · 방사형 · 메시 — types a part may not use are disabled with the reason as a tooltip */
+function typeSeg(k){
+  const gp=S.grad.parts[k],cur=gp.on?gp.type:'solid',m=meshPart(S.grad);
+  return `<div class="seg">${[['solid','단색'],['linear','선형'],['radial','방사형'],['mesh','메시']].map(([t,n])=>{
+    const no=t!=='solid'&&!ALLOW[k][t],busy=t==='mesh'&&m&&m!==k;
+    return `<button type="button" data-gtype="${t}" aria-pressed="${cur===t}" ${no||busy?'disabled':''} title="${no?`${GNAME[k]}에는 쓰지 않아요 (위계·크기 보호)`:busy?`메시는 한 곳만 · 지금 ${GNAME[m]}`:''}">${n}</button>`;}).join('')}</div>`;
+}
+function setPart(c,live){if(!live)push();const key=PARTS[pop.part].tabs[pop.tab];S.over[key]=norm(c);render();fillPop();}
+$('#popTabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b){pop.tab=b.dataset.tab;fillPop();}});
+$('#popBody').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;const key=PARTS[pop.part].tabs[pop.tab];
+  if(b.dataset.set)return setPart(b.dataset.set);
+  const a=b.dataset.act;
+  if(a==='lineon'){push();S.stroke.level='soft';render();fillPop();}
+  if(a==='raw'){push();S.over[key]=B.pick[key];S.raw[key]=true;render();fillPop();}
+  if(a==='unraw'){push();delete S.raw[key];render();fillPop();}
+  if(a==='auto'){push();delete S.over[key];delete S.raw[key];const gp=S.grad.parts[pop.part];if(gp&&pop.tab==='fill'&&gp.on)gp.on=false;closeDrawerIf(pop.part);render();fillPop();}
+  if(a==='drawer')return openDrawer(pop.part);
+  if(b.dataset.gtype){
+    const k=pop.part,gp=S.grad.parts[k],t=b.dataset.gtype;if(!gp)return;
+    if(t==='solid'){if(!gp.on)return;push();gp.on=false;closeDrawerIf(k);render();fillPop();return;}
+    if(gp.on&&gp.type===t)return;
+    if(!canTurnOn(k,t))return;
+    push();if(gp.on)convertCfg(k,gp,t);else S.grad.parts[k]={...defaultCfg(k,t),on:true};
+    GUI.part=k;render();fillPop();return;
+  }
+  if(b.dataset.unlink){push();S.over[b.dataset.unlink]=B.C[b.dataset.unlink];render();fillPop();}
+  if(b.dataset.relink){push();delete S.over[b.dataset.relink];render();fillPop();}
+});
+$('#popBody').addEventListener('focusin',e=>{if(e.target.matches('[data-custom]'))push();});
+$('#popBody').addEventListener('input',e=>{if(!e.target.matches('[data-custom]'))return;const key=PARTS[pop.part].tabs[pop.tab];S.over[key]=e.target.value.toUpperCase();render();});
+$('#popBody').addEventListener('change',e=>{if(e.target.matches('[data-custom]'))fillPop();});
+$('#popClose').addEventListener('click',closePop);
+document.addEventListener('click',e=>{if(!$('#pop').hidden&&!e.target.closest('#pop')&&!e.target.closest('#screen'))closePop();});
+
+/* hover: highlight + label of what will be edited */
+const hl=$('#hl'),hlab=$('#hoverLab');
+screen.addEventListener('mousemove',e=>{
+  if(e.target.closest('#composeInput')){hl.hidden=true;hlab.hidden=true;return;}
+  const part=partOf(e.target);if(!part){hl.hidden=true;hlab.hidden=true;return;}
+  const el=e.target.closest('[data-part]'),sr=screen.getBoundingClientRect(),r=el.getBoundingClientRect(),st=stage.getBoundingClientRect();
+  if(part==='bg'){hl.hidden=true;}else{hl.hidden=false;Object.assign(hl.style,{left:(r.left-sr.left)+'px',top:(r.top-sr.top)+'px',width:r.width+'px',height:r.height+'px'});}
+  hlab.hidden=false;hlab.textContent=`${PARTS[part].name} · 클릭해서 편집`;hlab.style.left=(e.clientX-st.left+stage.scrollLeft)+'px';hlab.style.top=(e.clientY-st.top+stage.scrollTop)+'px';
+});
+screen.addEventListener('mouseleave',()=>{hl.hidden=true;hlab.hidden=true;});
+screen.addEventListener('click',e=>{if(e.target.closest('#composeInput,.plus'))return;const part=partOf(e.target);if(part){e.stopPropagation();openPop(part,e);}});
+
+/* ---------- line control ---------- */
+function renderLineCtl(){
+  const st=S.stroke;
+  $$('#lineLevel button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===st.level)));
+  const i=$('#s_lineW');i.value=st.width;i.style.setProperty('--p',((st.width-.5)/3.5*100)+'%');$('#lineWOut').textContent=st.width+'px';
+  $$('#modeSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===S.mode)));
+  $$('#shapeSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===S.shape)));
+  renderGradRecs();
+  $$('#sampleSeg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===S.sample)));
+}
+
+/* ---------- render ---------- */
+function render(){B=buildFrom(S);applyVars();drawBubbles();renderLeft();renderLineCtl();renderChecks();renderEdits();renderDrawer();}
+
+/* ---------- events ---------- */
+$$('[data-tag]').forEach(g=>g.addEventListener('click',e=>{
+  const b=e.target.closest('.chip');if(!b||b.getAttribute('aria-disabled')==='true')return;push();
+  const axis=g.dataset.tag,v=b.dataset.v,P=S.pal,T=P.tags;T[axis]=T[axis]===v?null:v;
+  /* 무드 restyles the current palette, 온도 tints it, 용도 only steers the recommendations */
+  if(axis!=='theme'){P.look=lookOf(P);
+    if(axis==='tone'&&T.tone){P.look.mood=T.tone;S.mode=MOOD[T.tone].dark?'dark':'light';}
+    if(axis==='temp')P.look.temp=T.temp;
+    const fresh=palOf(P,P.rule);P.swatches=fresh.map((c,i)=>P.locks[i]?P.swatches[i]:c);P.roles=rolesFor(P);P.curated=-1;}
+  render();recommend();
+}));
+$('#recBtn').addEventListener('click',()=>{recommend();toast('새 추천 6안을 만들었어요');});
+document.addEventListener('click',e=>{const j=e.target.closest('[data-jump]');if(!j)return;const t=document.getElementById(j.dataset.jump);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});});
+$('#recs').addEventListener('click',e=>{
+  const s=e.target.closest('[data-sim]');if(s)return similar(+s.dataset.sim);
+  const a=e.target.closest('[data-rec]');if(!a)return;const r=RECS[+a.dataset.rec];recPicked=+a.dataset.rec;applyState(r.pal,r.mode);renderRecs();toast('추천 안을 적용했어요',true);
+});
+$('#baseFix').addEventListener('click',e=>{if(e.target.closest('#unfix')){push();const P=S.pal;P.baseFixed=false;const fresh=palOf(P,P.rule);P.swatches=fresh.map((c,i)=>P.locks[i]?P.swatches[i]:c);P.roles=rolesFor(P);P.curated=-1;render();recommend();}});
+$('#curated').addEventListener('click',e=>{const b=e.target.closest('.combo');if(!b)return;const c=CURATED[+b.dataset.i],st=curatedState(c);applyState(st.pal,st.mode);toast(`‘${c.name}’로 시작해요`,true);recommend();});
+$('#libSort').addEventListener('click',e=>{const b=e.target.closest('button');if(b){libSort=b.dataset.v;renderLib();}});
+$('#libMore').addEventListener('click',()=>{libAll=!libAll;renderLib();});
+$('#rules').addEventListener('click',e=>{const b=e.target.closest('[data-rule]');if(!b)return;push();const P=S.pal;P.rule=b.dataset.rule;
+  const fresh=palOf(P,P.rule);P.swatches=fresh.map((c,i)=>P.locks[i]?P.swatches[i]:c);P.roles=rolesFor(P);P.curated=-1;render();});
+$('#strip').addEventListener('click',e=>{const lk=e.target.closest('[data-lock]');if(!lk)return;push();const i=+lk.dataset.lock;S.pal.locks[i]=!S.pal.locks[i];render();});
+function setBase(h,fixed){if(!hexOk(h))return false;const P=S.pal;P.base=norm(h);P.baseFixed=fixed;
+  const fresh=palOf(P,P.rule);P.swatches=fresh.map((c,i)=>P.locks[i]?P.swatches[i]:c);P.roles=rolesFor(P);P.curated=-1;render();return true;}
+$('#baseColor').addEventListener('focus',push);
+$('#baseColor').addEventListener('input',e=>setBase(e.target.value,true));
+$('#baseColor').addEventListener('change',()=>recommend());
+$('#baseHex').addEventListener('change',e=>{push();if(!setBase(e.target.value,true)){toast('HEX는 #8BEABB처럼 6자리로 입력해 주세요');e.target.value=S.pal.base;}else recommend();});
+$('#shuffle').addEventListener('click',()=>{push();setBase(hslToHex(Math.random()*360,.45+Math.random()*.45,.5+Math.random()*.3),false);recommend();toast('새 기준색으로 섞었어요',true);});
+
+/* ---------- gradient presets & quick-apply row (plan §6–7) ----------
+   Every chip is computed from the current palette and shown only if the whole screen still passes readability. */
+/* context for one part as if its gradient were off: the build, its own color, and the palette refs in this mode */
+function gctx(k){
+  const b0=buildFrom({...S,grad:{parts:{...S.grad.parts,[k]:{on:false}}}});
+  const self={sent:b0.E.sent,recv:b0.E.recv,bg:b0.C.bg,accent:b0.C.accent}[k];
+  const refs=[...S.pal.swatches.map((c,i)=>({ref:'sw:'+i,c:resolveRef('sw:'+i,S.pal,b0.R)})),{ref:'role:accent',c:b0.R.accent},{ref:'role:sub',c:b0.R.sub}];
+  return {b0,self,refs,R:b0.R,baseHue:hexToHsl(b0.R.sub)[0]};
+}
+/* 팔레트 자동 분배: n distinct palette refs suited to the part (backgrounds take the lightest, bubbles stay near their own
+   lightness); with 보색·분할·포인트·다채 at most ONE strong color (guide: 강한 색은 1개) */
+function distribute(n,k,cx){
+  const [,,ls]=hexToHsl(cx.self),strongRule=STRONG_RULES.includes(S.pal.rule);
+  const cand=[...cx.refs].sort(k==='bg'||k==='recv'?(a,b)=>lum(b.c)-lum(a.c):(a,b)=>Math.abs(hexToHsl(a.c)[2]-ls)-Math.abs(hexToHsl(b.c)[2]-ls));
+  const out=[];let strong=0;
+  for(const x of cand){if(out.length>=n)break;
+    if(out.some(o=>contrast(o.c,x.c)<1.1&&hueDiff(hexToHsl(o.c)[0],hexToHsl(x.c)[0])<14))continue;
+    const st=isStrong(x.c,cx.baseHue);if(strongRule&&st&&strong>=1)continue;if(st)strong++;out.push(x);}
+  for(let i=0;out.length<n;i++)out.push(cand[i%cand.length]);
+  return out.map(x=>x.ref);
+}
+const MESH_LAYOUT={corner:[[.02,.02],[.98,.98]],aurora:[[.15,.08],[.5,.02],[.85,.08],[.5,.98]],blob:[[.35,.4],[.65,.45],[.5,.65]]};
+/* plan §7 presets, computed live from the current palette */
+function presetDefs(k,cx){
+  const near=(()=>{let j=0,bd=9;cx.refs.slice(0,6).forEach((x,i)=>{const d=Math.abs(hexToHsl(x.c)[2]-hexToHsl(cx.self)[2])+hueDiff(hexToHsl(x.c)[0],hexToHsl(cx.self)[0])/360;if(d<bd){bd=d;j=i;}});return j;})();
+  const nb=near<5?[near,near+1]:[near-1,near];
+  const lightOrder=cx.refs.slice(0,6).map((x,i)=>({i,l:lum(x.c)})).sort((a,b)=>b.l-a.l).map(x=>x.i);
+  const mesh=(id,name,spread,base)=>{const L=MESH_LAYOUT[id],refs=distribute(L.length,k,cx);
+    return {id,name,cfg:{type:'mesh',points:L.map(([x,y],i)=>({ref:refs[i],x,y})),spread,base,stops:blankPart().stops,angle:135,center:[.5,.5]}};};
+  const D={
+    soft:{id:'soft',name:'은은한 흐름',cfg:{type:'linear',stops:[{ref:'self',at:0},{ref:'self',at:1,dl:k==='bg'?.04:.08}],angle:135}},
+    nb3:{id:'nb3',name:'이웃 3색',cfg:{type:'linear',stops:[{ref:'self',at:0},{ref:'sw:'+nb[0],at:.5},{ref:'sw:'+nb[1],at:1}],angle:135}},
+    sunset:{id:'sunset',name:'노을',cfg:{type:'linear',stops:lightOrder.slice(0,4).map((i,j)=>({ref:'sw:'+i,at:j/3})),angle:180}},
+    spot:{id:'spot',name:'스포트라이트',cfg:{type:'radial',stops:[{ref:'self',at:0},{ref:'auto',at:1}],center:[.3,.25],angle:135}},
+    corner:mesh('corner','코너 글로우',.7,'self'),   /* base = the part's own color, already one step under Base for the background */
+    aurora:mesh('aurora','오로라',.85,'self'),
+    blob:mesh('blob','소프트 블롭',.55,'self')};
+  const LIST={bg:['sunset','corner','aurora','blob','nb3','soft'],sent:['soft','nb3','spot','blob'],recv:['soft'],accent:['soft','nb3','spot']}[k];
+  const meshElsewhere=meshPart(S.grad)&&meshPart(S.grad)!==k;
+  return LIST.map(id=>D[id]).filter(d=>!(d.cfg.type==='mesh'&&meshElsewhere)).map(d=>{
+    const c={...blankPart(),...d.cfg};if(c.type==='linear'||c.type==='radial')c.stops=c.stops.slice(0,ALLOW[k][c.type]);return {...d,cfg:c};});
+}
+/* keep a preset only if the whole screen passes readability with it; otherwise try the gradient auto-fix on a copy */
+function passes(k,cfg){
+  const saved=S.grad,savedOver=S.over,trial=JSON.parse(JSON.stringify({parts:{...saved.parts,[k]:{...cfg,on:true}}}));
+  S.grad=trial;let out=null;
+  try{for(let i=0;i<8;i++){const b=buildFrom(S),bad=checksFor(b,S.stroke).filter(x=>!x.ok);
+      if(!bad.length){out={cfg:S.grad.parts[k],adjusted:i>0};break;}
+      S.over={...savedOver};bad.forEach(x=>x.fix());S.over=savedOver;}   /* only gradient fixes may stick */
+  }finally{S.grad=saved;S.over=savedOver;}
+  return out;
+}
+function harmonyOk(f,t,rule){
+  const [h1,s1]=hexToHsl(f),[h2,s2]=hexToHsl(t),gray=s1<.1||s2<.1,hd=gray?0:hueDiff(h1,h2);
+  if(STRONG_RULES.includes(rule))return hd<25;   /* strong rules: stay in the base family (one strong color) */
+  if(rule==='shades')return hd<20;
+  if(rule==='analog')return hd<=65;
+  if(rule==='gradient')return hd<=80;
+  if(rule==='classy')return s2<.4;
+  return true;
+}
+/* extra 2-color pairs for my bubble when the presets leave room in the row */
+function pairRecs(k,cx,need){
+  const out=[];if(need<=0||k!=='sent')return out;
+  for(const x of cx.refs){if(out.length>=need)break;
+    if(contrast(x.c,cx.self)<1.12||!harmonyOk(cx.self,x.c,S.pal.rule))continue;
+    const r=passes(k,{...blankPart(),type:'linear',stops:[{ref:'self',at:0},{ref:x.ref,at:1}],angle:135});
+    if(r)out.push({id:'pair-'+x.ref,name:'2색 · '+(hueDiff(hexToHsl(x.c)[0],hexToHsl(cx.self)[0])<15?'같은 계열':'이웃 색'),cfg:r.cfg,adjusted:r.adjusted});}
+  return out;
+}
+let GRCACHE={key:'',list:[]};
+function gradRecs(k){
+  const key=JSON.stringify({k,pal:S.pal,over:S.over,raw:S.raw,mode:S.mode,stroke:S.stroke,o:GPARTS.filter(x=>x!==k).map(x=>S.grad.parts[x])});
+  if(GRCACHE.key===key)return GRCACHE.list;
+  const cx=gctx(k),list=[];
+  for(const d of presetDefs(k,cx)){const r=passes(k,d.cfg);if(r)list.push({...d,cfg:r.cfg,adjusted:r.adjusted});}
+  list.push(...pairRecs(k,cx,6-list.length));
+  GRCACHE={key,list:list.slice(0,6)};return GRCACHE.list;
+}
+const cfgKey=c=>JSON.stringify([c.type,c.type==='mesh'?[c.points,c.spread,c.base]:[c.stops,c.angle,c.type==='radial'?c.center:0]]);
+function previewCss(k,cfg){const cx=gctx(k),away={sent:cx.b0.E.recv,recv:cx.b0.C.bg,bg:cx.b0.E.recv,accent:cx.b0.C.header}[k];
+  return specFor(cfg,(ref,dl)=>{let c=refColor(ref,S.pal,cx.R,cx.self,k,away);if(dl)c=shiftAway(c,dl,away);return c;},k).css;}
+function renderGradRecs(){
+  const box=$('#gradRecs');if(!box)return;const k=GUI.part,p=S.grad.parts[k],list=gradRecs(k);
+  $('#gPart').value=k;
+  box.innerHTML=`<button type="button" class="gchip none" data-grec="off" aria-pressed="${!p.on}" title="${GNAME[k]} 그라데이션 끄기">없음</button>`+
+    (list.length?list.map((c,i)=>`<button type="button" class="gchip${c.cfg.type==='mesh'?' mesh':''}" data-grec="${i}" aria-pressed="${p.on&&cfgKey(p)===cfgKey(c.cfg)}" style="background:${previewCss(k,c.cfg)}" title="${c.name} · ${GTYPES[c.cfg.type]}${c.adjusted?' · 가독성 조정':''}" aria-label="${c.name} ${GTYPES[c.cfg.type]}"></button>`).join('')
+      :`<span class="hint">가독성을 지키는 안이 없어요 · 방식을 단색·유사색으로 바꿔 보세요</span>`)+
+    (p.on?`<button type="button" class="gchip none" data-gedit="1" title="점·색·각도 세부 편집">편집</button>`:'');
+}
+const GUI={part:'sent'};
+$('#gPart').innerHTML=GPARTS.map(k=>`<option value="${k}">${GNAME[k]}</option>`).join('');
+$('#gPart').addEventListener('change',e=>{GUI.part=e.target.value;renderGradRecs();});
+function canTurnOn(k,type){
+  const p=S.grad.parts[k];
+  if(!p.on&&gradOn(S.grad).length>=2){toast(`그라데이션은 한 화면에 두 곳까지만 쓸 수 있어요. ${gradOn(S.grad).map(x=>GNAME[x]).join('·')} 중 하나를 단색으로 바꿔 주세요`);return false;}
+  const m=meshPart(S.grad);if(type==='mesh'&&m&&m!==k){toast(`메시는 한 곳만 쓸 수 있어요. 지금은 ${GNAME[m]}에 있어요`);return false;}
+  return true;
+}
+$('#gradRecs').addEventListener('click',e=>{
+  if(e.target.closest('[data-gedit]'))return openDrawer(GUI.part);
+  const b=e.target.closest('[data-grec]');if(!b)return;const k=GUI.part,p=S.grad.parts[k];
+  if(b.dataset.grec==='off'){if(!p.on)return;push();p.on=false;closeDrawerIf(k);render();if(pop.part)fillPop();return;}
+  const c=gradRecs(k)[+b.dataset.grec];if(!c||!canTurnOn(k,c.cfg.type))return;
+  push();S.grad.parts[k]={...JSON.parse(JSON.stringify(c.cfg)),on:true};render();if(pop.part)fillPop();
+  toast(`${GNAME[k]}: ${c.name} (${GTYPES[c.cfg.type]})${c.adjusted?' · 가독성 위해 조정됨':''}`,true);
+});
+
+/* ---------- popover helpers: type switching keeps the colors ---------- */
+function defaultCfg(k,type){
+  const hit=gradRecs(k).find(r=>r.cfg.type===type);if(hit)return JSON.parse(JSON.stringify(hit.cfg));
+  const cx=gctx(k),c=blankPart();c.type=type;
+  if(type==='radial')c.center=[.3,.25];
+  if(type==='mesh'){const L=MESH_LAYOUT.blob.slice(0,ALLOW[k].mesh),refs=distribute(L.length,k,cx);c.points=L.map(([x,y],i)=>({ref:refs[i],x,y}));c.base='self';c.spread=.6;}
+  return c;
+}
+function convertCfg(k,p,type){
+  if(type===p.type)return;
+  if(type==='mesh'){const refs=p.stops.slice(1).map(s=>s.ref).filter(r=>r!=='self'&&r!=='auto'),cx=gctx(k),L=MESH_LAYOUT.blob;
+    const fill=distribute(3,k,cx);while(refs.length<Math.min(3,ALLOW[k].mesh))refs.push(fill[refs.length]);
+    p.points=refs.slice(0,ALLOW[k].mesh).map((r,i)=>({ref:r,x:L[i%3][0],y:L[i%3][1]}));p.base=p.stops[0].ref||'self';p.spread=p.spread||.6;}
+  else if(p.type==='mesh'){const refs=[p.base||'self',...p.points.map(q=>q.ref)].slice(0,ALLOW[k][type]);p.stops=refs.map((r,i)=>({ref:r,at:+(i/(refs.length-1)).toFixed(3)}));}
+  else p.stops=p.stops.slice(0,ALLOW[k][type]);
+  if(type==='radial'&&!p.center)p.center=[.3,.25];
+  p.type=type;
+}
+
+/* ---------- gradient drawer: points, colors, spread, angle dial, shuffles ---------- */
+const DR={part:null,sel:0,drag:null};
+function openDrawer(k){if(!S.grad.parts[k].on)return;closePop();DR.part=k;DR.sel=0;renderDrawer();const d=$('#drawer');d.scrollIntoView({block:'nearest',behavior:'smooth'});d.querySelector('button')?.focus();}
+function closeDrawer(){DR.part=null;$('#drawer').hidden=true;}
+function closeDrawerIf(k){if(DR.part===k)closeDrawer();}
+const DRAWER_ROWS={sent:['내 말풍선 글자','내 ↔ 받은 말풍선','흑백 위계 · 내 그라데이션 명암 끝'],recv:['받은 말풍선 글자','받은 말풍선 ↔ 배경','내 ↔ 받은 말풍선'],bg:['보조 글자 (10px)','받은 말풍선 ↔ 배경','안읽음 숫자 ↔ 배경'],accent:['보내기 버튼']};
+function drItems(p){return p.type==='mesh'?p.points:p.stops;}
+function renderDrawer(){
+  const box=$('#drawer'),k=DR.part;if(!k)return void(box.hidden=true);
+  const p=S.grad.parts[k],g=B.G[k];if(!p.on||!g)return closeDrawer();
+  const R=B.R,dark=isDark(R.base),mesh=p.type==='mesh',items=drItems(p),max=ALLOW[k][p.type],min=2;
+  if(DR.sel!=='base'&&DR.sel>=items.length)DR.sel=0;
+  const selRef=DR.sel==='base'?p.base:items[DR.sel].ref;
+  const rows=checksFor(B,S.stroke).filter(x=>DRAWER_ROWS[k].includes(x.n)),bad=rows.filter(x=>!x.ok),txt=rows.find(x=>x.g==='text');
+  const chip=(ref,c,label)=>`<button type="button" class="dref" data-dref="${ref}" style="background:${c}" aria-pressed="${selRef===ref}" title="${label}" aria-label="${label}"></button>`;
+  const colorOf=ref=>ref==='self'||ref==='auto'?null:resolveRef(ref,S.pal,R);
+  const itemColor=(it,i)=>mesh?g.points[i].c:g.stops[i].c;
+  box.hidden=false;
+  box.innerHTML=`<div class="dr-h"><b>${GNAME[k]} · ${GTYPES[p.type]}</b><button type="button" class="btn dark sm" data-d="close">완료</button></div>
+  <div class="seg">${['linear','radial','mesh'].map(t=>{const ok=ALLOW[k][t],m=meshPart(S.grad);const dis=!ok||(t==='mesh'&&m&&m!==k);
+    return `<button type="button" data-gtype="${t}" aria-pressed="${p.type===t}" ${dis?'disabled':''} title="${!ok?GNAME[k]+'에는 쓰지 않아요':dis?'메시는 한 곳만':''}">${GTYPES[t]}</button>`;}).join('')}</div>
+  <div class="dcanvas k-${k}" id="dcanvas" style="background:${g.css}">${mesh?p.points.map((q,i)=>`<button type="button" class="dpt" data-pt="${i}" style="left:${q.x*100}%;top:${q.y*100}%;background:${g.points[i].c}" aria-pressed="${DR.sel===i}" aria-label="점 ${i+1} 옮기기">${i+1}</button>`).join('')
+    :p.type==='radial'?`<button type="button" class="dpt" data-center="1" style="left:${p.center[0]*100}%;top:${p.center[1]*100}%" aria-label="중심 옮기기">●</button>`:''}</div>
+  <p class="note">${mesh?'점을 끌어 옮기고, 빈 곳을 두 번 눌러 점을 추가해요.':p.type==='radial'?'중심점을 끌어 빛이 퍼지는 위치를 정해요.':'아래 다이얼로 방향을 정해요 (15° 단위).'}</p>
+  <div class="pop-lab">${mesh?'점':'색 순서'} (${items.length}/${max})</div>
+  <div class="ditems">${mesh?`<button type="button" class="ditem base" data-sel="base" style="background:${g.base}" aria-pressed="${DR.sel==='base'}" title="바탕색">바탕</button>`:''}${items.map((it,i)=>`<button type="button" class="ditem" data-sel="${i}" style="background:${itemColor(it,i)}" aria-pressed="${DR.sel===i}" aria-label="${mesh?'점':'색'} ${i+1}">${i+1}</button>`).join('')}
+    ${items.length<max?`<button type="button" class="btn sm" data-d="add">+ 추가</button>`:''}${DR.sel!=='base'&&items.length>min?`<button type="button" class="btn sm" data-d="del">삭제</button>`:''}</div>
+  <div class="pop-lab">${DR.sel==='base'?'바탕':`${mesh?'점':'색'} ${DR.sel+1}`} 색 · 팔레트와 역할색에서만</div>
+  <div class="gsw">${chip('self',(B.E[k]||B.C[k]),'이 부위의 기본 색')}<span class="sep"></span>${S.pal.swatches.map((c,i)=>chip('sw:'+i,slotFor(c,dark),`팔레트 ${i+1} · ${slotFor(c,dark)}`)).join('')}<span class="sep"></span>${ROLES_G.map(([r,n])=>chip('role:'+r,R[r],`${n} · ${R[r]}`)).join('')}</div>
+  ${p.type==='linear'?`<div class="dial-row"><div class="dial" id="dial" tabindex="0" role="slider" aria-label="방향" aria-valuemin="0" aria-valuemax="345" aria-valuenow="${p.angle}"><i style="transform:rotate(${p.angle}deg)"></i></div><span><b>${p.angle}°</b><br><small class="hint">끌거나 ← → 키</small></span></div>`:''}
+  ${mesh?`<div class="sl"><label for="dSpread">퍼짐</label><output>${Math.round(p.spread*100)}%</output><input id="dSpread" type="range" min="0.3" max="1" step="0.05" value="${p.spread}" style="--p:${(p.spread-.3)/.7*100}%"></div>`:''}
+  <div class="drow"><button type="button" class="btn sm" data-d="shufC">색 섞기</button>${p.type!=='linear'?`<button type="button" class="btn sm" data-d="shufP">위치 섞기</button>`:''}<button type="button" class="btn sm" data-d="dist">팔레트 자동 분배</button><button type="button" class="btn sm" data-d="figma">이 그라디언트만 Figma로</button></div>
+  <div class="dread ${bad.length?'warn':'ok'}">${bad.length?`가독성: ${bad.length}곳 확인 필요 · ${bad.map(x=>x.n).join(', ')} <button type="button" class="btn sm dark" data-d="fix">자동 수정</button>`:`가독성: OK (최저 대비 ${txt?txt.r.toFixed(1):rows[0]?rows[0].r.toFixed(1):'-'}:1)`}</div>`;
+}
+/* while dragging only the preview is refreshed, so the pointer capture survives */
+function liveRefresh(){B=buildFrom(S);applyVars();drawBubbles();renderChecks();const g=B.G[DR.part],cv=$('#dcanvas');if(g&&cv){cv.style.background=g.css;
+  const p=S.grad.parts[DR.part];if(p.type==='mesh')cv.querySelectorAll('[data-pt]').forEach(el=>{const q=p.points[+el.dataset.pt];el.style.left=q.x*100+'%';el.style.top=q.y*100+'%';});
+  if(p.type==='radial'){const el=cv.querySelector('[data-center]');el.style.left=p.center[0]*100+'%';el.style.top=p.center[1]*100+'%';}}}
+const strongCount=(k,skipIdx)=>{const p=S.grad.parts[k],g=B.G[k],hue=hexToHsl(B.R.sub)[0];const cols=p.type==='mesh'?g.points.map(q=>q.c):g.stops.map(s=>s.c);return cols.filter((c,i)=>i!==skipIdx&&isStrong(c,hue)).length;};
+function setItemRef(k,ref){
+  const p=S.grad.parts[k],items=drItems(p);
+  if(DR.sel!=='base'&&STRONG_RULES.includes(S.pal.rule)){const c=ref==='self'?(B.E[k]||B.C[k]):resolveRef(ref,S.pal,B.R);
+    if(isStrong(c,hexToHsl(B.R.sub)[0])&&strongCount(k,DR.sel)>=1){toast(`${ruleName(S.pal.rule)} 방식에서는 강한 색을 한 곳만 써요 (가이드: 강한 색은 1개)`);return;}}
+  push();if(DR.sel==='base')p.base=ref;else{items[DR.sel].ref=ref;delete items[DR.sel].pull;delete items[DR.sel].dl;}render();
+}
+$('#drawer').addEventListener('click',e=>{
+  const k=DR.part;if(!k)return;const p=S.grad.parts[k],t=e.target.closest('button');if(!t)return;
+  if(t.dataset.gtype){if(t.dataset.gtype===p.type||!canTurnOn(k,t.dataset.gtype))return;push();convertCfg(k,p,t.dataset.gtype);DR.sel=0;render();return;}
+  if(t.dataset.sel!=null){DR.sel=t.dataset.sel==='base'?'base':+t.dataset.sel;renderDrawer();return;}
+  if(t.dataset.pt!=null){DR.sel=+t.dataset.pt;renderDrawer();return;}
+  if(t.dataset.dref)return setItemRef(k,t.dataset.dref);
+  const a=t.dataset.d,items=drItems(p),cx=()=>gctx(k);
+  if(a==='close')return closeDrawer();
+  if(a==='figma')return copy(figmaSvg('grad',[k]),`${GNAME[k]} 그라디언트 SVG를`,FIGMA_HINT);
+  if(a==='fix')return autoFix();
+  push();
+  if(a==='add'){const ref=distribute(items.length+1,k,cx())[items.length];
+    if(p.type==='mesh')p.points.push({ref,x:.2+Math.random()*.6,y:.2+Math.random()*.6});
+    else{p.stops.push({ref,at:1});p.stops.forEach((s,i)=>s.at=+(i/(p.stops.length-1)).toFixed(3));}
+    DR.sel=items.length-1;}
+  if(a==='del'&&DR.sel!=='base'){items.splice(DR.sel,1);if(p.type!=='mesh')p.stops.forEach((s,i)=>s.at=+(i/(p.stops.length-1)).toFixed(3));DR.sel=0;}
+  if(a==='dist'||a==='shufC'){const pool=distribute(Math.max(items.length,6),k,cx());
+    const refs=a==='dist'?pool.slice(0,items.length):[...pool].sort(()=>Math.random()-.5).slice(0,items.length);
+    items.forEach((it,i)=>{if(p.type!=='mesh'&&i===0&&a==='dist')return;it.ref=refs[i];delete it.pull;delete it.dl;});
+    if(STRONG_RULES.includes(S.pal.rule)){B=buildFrom(S);const hue=hexToHsl(B.R.sub)[0];let n=0;items.forEach((it,i)=>{const c=it.ref==='self'?B.E[k]||B.C[k]:resolveRef(it.ref,S.pal,B.R);if(isStrong(c,hue)&&++n>1)it.ref='self';});}}
+  if(a==='shufP'){if(p.type==='mesh')p.points.forEach(q=>{q.x=+(.05+Math.random()*.9).toFixed(3);q.y=+(.05+Math.random()*.9).toFixed(3);});else p.center=[+(.1+Math.random()*.8).toFixed(3),+(.1+Math.random()*.8).toFixed(3)];}
+  render();
+});
+function canvasPos(e){const r=$('#dcanvas').getBoundingClientRect();return [clamp((e.clientX-r.left)/r.width,0,1),clamp((e.clientY-r.top)/r.height,0,1)];}
+$('#drawer').addEventListener('pointerdown',e=>{
+  const pt=e.target.closest('[data-pt],[data-center]'),dial=e.target.closest('#dial');
+  if(pt){e.preventDefault();push();DR.drag=pt.dataset.center?'center':+pt.dataset.pt;if(DR.drag!=='center')DR.sel=DR.drag;$('#dcanvas').setPointerCapture(e.pointerId);}
+  if(dial){e.preventDefault();push();DR.drag='dial';dial.setPointerCapture(e.pointerId);dialTo(e);}
+});
+function dialTo(e){const r=$('#dial').getBoundingClientRect(),a=Math.atan2(e.clientX-(r.left+r.width/2),-(e.clientY-(r.top+r.height/2)))*180/Math.PI;
+  S.grad.parts[DR.part].angle=((Math.round(a/15)*15)%360+360)%360;liveRefresh();const i=$('#dial i');if(i)i.style.transform=`rotate(${S.grad.parts[DR.part].angle}deg)`;}
+$('#drawer').addEventListener('pointermove',e=>{
+  if(DR.drag==null)return;const p=S.grad.parts[DR.part];
+  if(DR.drag==='dial')return dialTo(e);
+  const [x,y]=canvasPos(e);if(DR.drag==='center')p.center=[+x.toFixed(3),+y.toFixed(3)];else{p.points[DR.drag].x=+x.toFixed(3);p.points[DR.drag].y=+y.toFixed(3);}
+  liveRefresh();
+});
+['pointerup','pointercancel'].forEach(t=>$('#drawer').addEventListener(t,()=>{if(DR.drag==null)return;DR.drag=null;render();}));
+$('#drawer').addEventListener('dblclick',e=>{
+  const cv=e.target.closest('#dcanvas');if(!cv||e.target.closest('[data-pt]'))return;const p=S.grad.parts[DR.part];
+  if(p.type!=='mesh'||p.points.length>=ALLOW[DR.part].mesh)return toast(p.type==='mesh'?`${GNAME[DR.part]}에는 점을 ${ALLOW[DR.part].mesh}개까지 둘 수 있어요`:'점 추가는 메시에서만 돼요');
+  const [x,y]=canvasPos(e);push();p.points.push({ref:distribute(p.points.length+1,DR.part,gctx(DR.part))[p.points.length],x:+x.toFixed(3),y:+y.toFixed(3)});DR.sel=p.points.length-1;render();
+});
+$('#drawer').addEventListener('keydown',e=>{
+  if(e.target.id!=='dial'||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();
+  const p=S.grad.parts[DR.part];push();p.angle=((p.angle+(e.key==='ArrowRight'||e.key==='ArrowUp'?15:-15))%360+360)%360;render();$('#dial')?.focus();
+});
+$('#drawer').addEventListener('input',e=>{if(e.target.id!=='dSpread')return;S.grad.parts[DR.part].spread=+e.target.value;liveRefresh();});
+$('#drawer').addEventListener('change',e=>{if(e.target.id==='dSpread')render();});
+$('#drawer').addEventListener('focusin',e=>{if(e.target.id==='dSpread')push();});
+$('#lineLevel').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;push();S.stroke.level=b.dataset.v;delete S.over.recvline;delete S.over.sentline;render();if(pop.part)fillPop();});
+$('#s_lineW').addEventListener('pointerdown',push);
+$('#s_lineW').addEventListener('input',e=>{S.stroke.width=+e.target.value;if(S.stroke.level==='none')S.stroke.level='soft';render();});
+document.addEventListener('click',e=>{const g=$('#gear');if(g.open&&!e.target.closest('#gear'))g.open=false;});
+$('#modeSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.dataset.v===S.mode)return;push();S.mode=b.dataset.v;
+  ['bg','header','recv','sent','accent','headtext','recvtext','senttext','meta','avatar'].forEach(k=>delete S.over[k]);S.raw={};render();
+  toast(S.mode==='dark'?'다크 버전을 만들었어요. 역할은 그대로, 명도만 바꿨어요':'라이트 버전으로 돌아왔어요',true);});
+$('#sampleSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.sample=b.dataset.v;MSGS=JSON.parse(JSON.stringify(SAMPLES[S.sample]));renderMsgs();renderLineCtl();});
+$('#badge').addEventListener('click',e=>{if(e.target.closest('#autoFix'))autoFix();});
+$('#edits').addEventListener('click',e=>{const b=e.target.closest('[data-unedit]');if(!b)return;push();delete S.over[b.dataset.unedit];delete S.raw[b.dataset.unedit];render();});
+$('#resetOver').addEventListener('click',()=>{push();S.over={};S.raw={};render();toast('수정한 부위를 모두 지웠어요',true);});
+
+$('#undoBtn').addEventListener('click',undo);
+$('#toastUndo').addEventListener('click',undo);
+/* press-and-hold compare */
+let cmpSaved=null;
+function cmpStart(){if(!HIST.length||cmpSaved)return;cmpSaved=snap();restore(HIST[HIST.length-1]);B=buildFrom(S);applyVars();drawBubbles();stage.classList.add('comparing');}
+function cmpEnd(){if(!cmpSaved)return;restore(cmpSaved);cmpSaved=null;stage.classList.remove('comparing');render();}
+$('#cmpBtn').addEventListener('pointerdown',cmpStart);['pointerup','pointerleave','pointercancel'].forEach(t=>$('#cmpBtn').addEventListener(t,cmpEnd));
+$('#cmpBtn').addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();cmpStart();}});
+$('#cmpBtn').addEventListener('keyup',cmpEnd);
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closePop();$('#gear').open=false;}
+  if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.key.toLowerCase()==='z'&&!e.target.closest('input[type=text],textarea')){e.preventDefault();undo();}
+});
+$('#grayBtn').addEventListener('click',e=>{S.gray=!S.gray;screen.classList.toggle('gray',S.gray);e.currentTarget.setAttribute('aria-pressed',String(S.gray));});
+$('#composer').addEventListener('submit',e=>{e.preventDefault();const v=$('#composeInput').value.trim();if(!v)return;
+  MSGS.forEach(m=>delete m.unread);const d=new Date(),hh=d.getHours(),mm=String(d.getMinutes()).padStart(2,'0');
+  MSGS.push({from:'s',text:v,time:`${hh<12?'오전':'오후'} ${hh%12||12}:${mm}`,unread:'1'});$('#composeInput').value='';renderMsgs();msgsEl.scrollTop=msgsEl.scrollHeight;});
+
+/* ---------- saved ---------- */
+const KEY='bubble-studio-saved';
+function loadSaved(){try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(_){return [];}}
+function storeSaved(l){try{localStorage.setItem(KEY,JSON.stringify(l));return true;}catch(_){return false;}}
+let SAVED=loadSaved();
+function renderSaved(){
+  const box=$('#saved');
+  if(!SAVED.length){box.innerHTML='<p class="note">미리보기 옆 ‘저장’을 누르면 여기에 쌓여요.</p>';return;}
+  box.innerHTML=SAVED.map((s,i)=>{const R=(s.state&&s.state.pal.roles)||(s.pal&&s.pal.roles)||s.roles||{};return `<div class="saved-item"><button class="load" type="button" data-load="${i}"><span class="bars"><i style="background:${R.base}"></i><i style="background:${R.sub}"></i><i style="background:${R.accent}"></i><i style="background:${R.neutral}"></i></span><span>${esc(s.name)}</span></button><button class="del" type="button" data-del="${i}" aria-label="${esc(s.name)} 삭제">✕</button></div>`;}).join('');
+}
+function stateObj(){return {pal:S.pal,stroke:S.stroke,over:S.over,raw:S.raw,mode:S.mode,shape:S.shape,grad:S.grad};}
+/* accepts current saves and older 2-color saves ({from,to,angle,pull} → stops), and keeps the limits (2 parts, 1 mesh) */
+const okRef=r=>typeof r==='string'&&/^(self|auto|sw:[0-5]|role:(base|sub|accent|neutral))$/.test(r);
+function cleanGrad(g){const d=newGrad();if(!g||!g.parts)return d;const wasOff=g.level==='none'; /* older saves: a global ‘none’ meant every part was off */
+  GPARTS.forEach(k=>{const p=g.parts[k];if(!p)return;const q=blankPart(),allow=ALLOW[k];
+    q.on=!!p.on&&!wasOff;q.type=allow[p.type]?p.type:'linear';q.angle=Math.round(clamp(+p.angle||135,0,359)/15)*15;
+    if(Array.isArray(p.stops)&&p.stops.length>=2)q.stops=p.stops.filter(s=>okRef(s.ref)).slice(0,allow[q.type]||4).map(s=>({ref:s.ref,at:clamp(+s.at||0,0,1),dl:+s.dl||0,pull:clamp(+s.pull||0,0,1)}));
+    else if('from' in p||'to' in p)q.stops=[{ref:p.from||'self',at:0},{ref:p.to||'auto',at:1,pull:clamp(+p.pull||0,0,1)}];
+    if(q.stops.length<2)q.stops=blankPart().stops;
+    if(Array.isArray(p.center))q.center=[clamp(+p.center[0],0,1),clamp(+p.center[1],0,1)];
+    if(Array.isArray(p.points))q.points=p.points.filter(t=>okRef(t.ref)).slice(0,5).map(t=>({ref:t.ref,x:clamp(+t.x,0,1),y:clamp(+t.y,0,1),pull:clamp(+t.pull||0,0,1)}));
+    if(q.type==='mesh'&&q.points.length<2)q.type='linear';
+    q.spread=clamp(+p.spread||.6,.25,1);q.base=okRef(p.base)?p.base:'self';
+    d.parts[k]=q;});
+  let meshSeen=false;GPARTS.forEach(k=>{const q=d.parts[k];if(q.on&&q.type==='mesh'){if(meshSeen)q.on=false;meshSeen=true;}});
+  gradOn(d).slice(2).forEach(k=>d.parts[k].on=false);return d;}
+function loadState(st){
+  if(!st||!st.pal||!st.pal.roles)return false;
+  push();const P=st.pal;
+  S.pal={base:P.base||'#8BEABB',rule:P.rule&&LINE_MAP[P.rule]?P.rule:'shades',tags:normTags(P.tags),look:P.look||{mood:normTags(P.tags).tone,int:'mid',adir:1,ah:0,temp:normTags(P.tags).temp},swatches:P.swatches&&P.swatches.length===6?P.swatches:palFor(P.base||'#8BEABB',P.rule||'shades',{tone:normTags(P.tags).tone}),locks:P.locks||[false,false,false,false,false,false],roles:P.roles,curated:-1,baseFixed:!!P.baseFixed};
+  S.stroke={level:'none',width:1.5,...(st.stroke&&LEVELS[st.stroke.level]?st.stroke:{}),pos:'inset'};
+  S.over=st.over||{};S.raw=st.raw||{};S.mode=st.mode==='dark'?'dark':'light';S.shape=SHAPES[st.shape]?st.shape:'round';S.grad=cleanGrad(st.grad);closePop();render();return true;
+}
+$('#saveCombo').addEventListener('click',()=>{
+  const P=S.pal,name=(P.curated>=0?CURATED[P.curated].name:`${P.base} · ${ruleName(P.rule)}`)+(S.mode==='dark'?' · 다크':'')+(S.stroke.level!=='none'?' · 선':'')+(Object.keys(B.G).length?' · 그라데이션':'');
+  SAVED.unshift({name,state:JSON.parse(JSON.stringify(stateObj()))});SAVED=SAVED.slice(0,12);
+  renderSaved();toast(storeSaved(SAVED)?'조합을 저장했어요':'이 브라우저에서는 저장이 막혀 있어 지금 화면에만 남아요');});
+$('#saved').addEventListener('click',e=>{
+  const d=e.target.closest('[data-del]');if(d){SAVED.splice(+d.dataset.del,1);storeSaved(SAVED);renderSaved();return;}
+  const l=e.target.closest('[data-load]');if(!l)return;const s=SAVED[+l.dataset.load];
+  const st=s.state||(s.pal?{pal:s.pal,over:{}}:{pal:{base:s.base,rule:s.rule,roles:s.roles}});
+  toast(loadState(st)?`‘${s.name}’을 불러왔어요`:'이 저장본은 형식이 달라 불러오지 못했어요',true);});
+
+/* ---------- export / import ---------- */
+function cssExport(){
+  const R=B.R,E=B.E,st=S.stroke;
+  return `:root {\n  /* ${S.mode==='dark'?'다크':'라이트'} · ${tagLabel(S.pal.tags)||'태그 없음'} */\n  --role-base: ${R.base};\n  --role-sub: ${R.sub};\n  --role-accent: ${R.accent};\n  --role-neutral: ${R.neutral};\n\n${Object.entries(KEYNAME).map(([k,n])=>{const g=B.G[k];
+    /* gradient parts: the gradient plus a solid fallback (the gradient's average color) */
+    return g?`  --chat-${k}: ${g.css}; /* ${n} · ${GTYPES[g.type]} 그라데이션${g.type==='mesh'?' (겹친 radial-gradient로 근사, background-image에 사용)':''} */\n  --chat-${k}-solid: ${g.avg}; /* ${n} · 단색 대체값 (샘플 평균) */`:`  --chat-${k}: ${E[k]||B.C[k]}; /* ${n} */`;}).join('\n')}\n  --chat-sendicon: ${B.C.sendicon};\n\n  --bubble-line: ${st.level};\n  --bubble-line-position: ${st.pos};\n  --bubble-line-width: ${st.level==='none'?0:st.width}px;\n}`;
+}
+function hexExport(){const R=B.R,gs=Object.entries(B.G);return `배경 ${R.base}\n내 말풍선 ${R.sub}\n강조 ${R.accent}\n글자 ${R.neutral}\n\n팔레트: ${S.pal.swatches.join(', ')}${S.stroke.level!=='none'?`\n받은 선 ${B.E.recvline} · 내 선 ${B.E.sentline}`:''}${gs.length?'\n\n그라데이션'+gs.map(([k,g])=>`\n${GNAME[k]} · ${GTYPES[g.type]}: ${g.type==='mesh'?`바탕 ${g.base} + 점 ${g.points.map(p=>p.c).join(', ')} (퍼짐 ${Math.round(g.spread*100)}%)`:g.stops.map(s=>s.c).join(' → ')+(g.type==='linear'?` (${g.angle}°)`:'')} · 단색 대체 ${g.avg}`).join(''):''}`;}
+function jsonExport(){return JSON.stringify({app:'bubble-theme-studio',version:3,state:stateObj(),colors:B.E},null,2);}
+async function copy(text,label,hint){try{await navigator.clipboard.writeText(text);toast(label+' 복사했어요'+(hint?` · ${hint}`:''));}catch(_){showBox(text,'자동 복사가 막혀 있어요. 아래를 선택해 복사하세요'+(hint?` · ${hint}`:''));}}
+
+/* ---------- Figma: SVG copied as text, pasted on the canvas with “Paste here” ----------
+   - gradients use gradientUnits="userSpaceOnUse" with coordinates sized to each shape, so they never stretch past it
+   - the sent bubble's path is mirrored numerically (no transforms on gradient shapes)
+   - mesh has no Figma equivalent: it becomes a named group of soft radial circles over the base, clipped to the shape
+   - every group carries an id → Figma layer name (chat/…, palette/…) */
+const FIGMA_HINT='Figma 캔버스에서 우클릭 → Paste here';
+const xe=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const n2=v=>+(+v).toFixed(2);
+function mirrorPath(d,w){
+  return d.replace(/([MHVAQLZ])([^MHVAQLZ]*)/g,(m,c,args)=>{const a=args.trim().split(/[\s,]+/).filter(Boolean).map(Number);
+    switch(c){case 'M':case 'L':return `${c}${n2(w-a[0])},${n2(a[1])} `;case 'H':return `H${n2(w-a[0])} `;case 'V':return `V${n2(a[0])} `;
+      case 'A':return `A${n2(a[0])},${n2(a[1])} ${a[2]} ${a[3]} ${1-a[4]} ${n2(w-a[5])},${n2(a[6])} `;   /* reflection flips the sweep */
+      case 'Q':return `Q${n2(w-a[0])},${n2(a[1])} ${n2(w-a[2])},${n2(a[3])} `;default:return 'Z';}});
+}
+const rectPath=(w,h,r)=>{r=Math.min(r,w/2,h/2);return `M${r},0 H${w-r} A${r},${r} 0 0 1 ${w},${r} V${h-r} A${r},${r} 0 0 1 ${w-r},${h} H${r} A${r},${r} 0 0 1 0,${h-r} V${r} A${r},${r} 0 0 1 ${r},0 Z`;};
+/* one shape (path d in local 0..w × 0..h) filled with a solid color or a gradient spec */
+function svgFill(g,d,w,h,uid,defs,solid){
+  const stops=s=>s.map(x=>`<stop offset="${n2(x.at)}" stop-color="${x.c}"/>`).join('');
+  if(!g)return `<path d="${d}" fill="${solid}"/>`;
+  if(g.type==='linear'){const [x1,y1,x2,y2]=lineEnds(g.angle,w,h,false);
+    defs.push(`<linearGradient id="${uid}" gradientUnits="userSpaceOnUse" x1="${n2(x1)}" y1="${n2(y1)}" x2="${n2(x2)}" y2="${n2(y2)}">${stops(g.stops)}</linearGradient>`);
+    return `<path d="${d}" fill="url(#${uid})"/>`;}
+  if(g.type==='radial'){const R=radR(g.center);
+    defs.push(`<radialGradient id="${uid}" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="1" gradientTransform="translate(${n2(g.center[0]*w)} ${n2(g.center[1]*h)}) scale(${n2(R*w)} ${n2(R*h)})">${stops(g.stops)}</radialGradient>`);
+    return `<path d="${d}" fill="url(#${uid})"/>`;}
+  defs.push(`<clipPath id="${uid}-clip"><path d="${d}"/></clipPath>`);
+  const circles=[...g.points].reverse().map((p,j)=>{const cx=p.x*w,cy=p.y*h,r=g.spread*Math.hypot(Math.max(p.x,1-p.x)*w,Math.max(p.y,1-p.y)*h);
+    defs.push(`<radialGradient id="${uid}-p${j}" gradientUnits="userSpaceOnUse" cx="${n2(cx)}" cy="${n2(cy)}" r="${n2(r)}"><stop offset="0" stop-color="${p.c}"/><stop offset="1" stop-color="${p.c}" stop-opacity="0"/></radialGradient>`);
+    return `<circle id="mesh-point-${g.points.length-j}" cx="${n2(cx)}" cy="${n2(cy)}" r="${n2(r)}" fill="url(#${uid}-p${j})"/>`;}).join('');
+  return `<g id="mesh"><path id="mesh-base" d="${d}" fill="${g.base}"/><g clip-path="url(#${uid}-clip)">${circles}</g></g>`;
+}
+const svgText=(x,y,txt,size,fill,weight,anchor)=>`<text x="${n2(x)}" y="${n2(y)}" font-family="IBM Plex Sans KR, Apple SD Gothic Neo, sans-serif" font-size="${size}" font-weight="${weight||400}" fill="${fill}"${anchor?` text-anchor="${anchor}"`:''}>${xe(txt)}</text>`;
+/* text layers from the live layout: one <text> per rendered line (same line-splitting as the PNG export) */
+function svgTextsOf(el,sr){
+  if(!el)return '';const cs=getComputedStyle(el),size=parseFloat(cs.fontSize),out=[];
+  const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let node;
+  while((node=walker.nextNode())){let line=null,i=0;const color=getComputedStyle(node.parentElement).color;
+    const flush=()=>{if(line&&line.s.trim())out.push(svgText(line.x,line.y,line.s,size,cssHex(color),cs.fontWeight));line=null;};
+    for(const ch of node.textContent){const r=document.createRange();r.setStart(node,i);r.setEnd(node,i+ch.length);i+=ch.length;
+      const rc=r.getClientRects()[0];if(!rc)continue;const y=rc.top-sr.top+rc.height/2+size*.35,x=rc.left-sr.left;
+      if(!line||Math.abs(line.y-y)>3){flush();line={s:'',x,y};}line.s+=ch;}
+    flush();}
+  return out.join('');
+}
+function cssHex(c){const m=c.match(/\d+(\.\d+)?/g);return m?rgbToHex(+m[0],+m[1],+m[2]):c;}
+const GSIZE={sent:[240,80],recv:[240,80],bg:[150,300],accent:[96,96]};
+function figmaSvg(scope,only){
+  const defs=[],E=B.E,R=B.R;let body='',W,H,uid=0;const id=()=>'f'+(++uid);
+  const swatch=(name,x,y,w,h,r,g,solid,label)=>{const d=rectPath(w,h,r);
+    return `<g id="${name}" transform="translate(${n2(x)} ${n2(y)})">${svgFill(g,d,w,h,id(),defs,solid)}</g>${label?svgText(x,y+h+16,label,11,'#4A5366')+(typeof label==='string'&&solid&&!g?'':''):''}`;};
+  if(scope==='grad'){
+    const parts=(only||GPARTS).filter(k=>B.G[k]);if(!parts.length)return null;
+    let x=24;W=0;H=0;
+    for(const k of parts){const [w,h]=GSIZE[k],g=B.G[k];
+      body+=swatch(`chat/${k}-${g.type}`,x,24,w,h,k==='accent'?w/2:16,g,null,`${GNAME[k]} · ${GTYPES[g.type]} · ${g.colors.length}색`);
+      x+=w+32;H=Math.max(H,h+60);}
+    W=x-8;
+  }else if(scope==='sheet'){
+    W=760;let y=24;
+    body+=svgText(24,y+16,'말풍선 테마 · '+(tagLabel(S.pal.tags)||ruleName(S.pal.rule))+(S.mode==='dark'?' · 다크':''),18,'#1B2130',600);y+=44;
+    body+=svgText(24,y,'역할 4색',12,'#646C7E',600);y+=10;
+    ROLES.forEach(([k,n],i)=>{body+=swatch(`palette/role/${k}`,24+i*150,y,132,72,12,null,R[k],`${n} ${R[k]}`);});y+=112;
+    body+=svgText(24,y,`팔레트 6칸 · ${ruleName(S.pal.rule)}`,12,'#646C7E',600);y+=10;
+    S.pal.swatches.forEach((c,i)=>{body+=swatch(`palette/swatch/${i+1}`,24+i*120,y,104,64,10,null,c,c);});y+=104;
+    body+=svgText(24,y,'테마 색상',12,'#646C7E',600);y+=10;
+    const keys=Object.keys(KEYNAME);keys.forEach((k,i)=>{const col=i%6,row=Math.floor(i/6),solid=B.G[k]?B.G[k].avg:(E[k]||B.C[k]);
+      body+=swatch(`chat/${k}`,24+col*120,y+row*86,40,40,10,null,solid,`${KEYNAME[k]} ${solid}`);});
+    y+=Math.ceil(keys.length/6)*86+14;
+    const parts=GPARTS.filter(k=>B.G[k]);
+    if(parts.length){body+=svgText(24,y,'그라디언트',12,'#646C7E',600);y+=10;let x=24,hh=0;
+      parts.forEach(k=>{const [w,h]=GSIZE[k],g=B.G[k];body+=swatch(`chat/${k}-${g.type}`,x,y,w,h,k==='accent'?w/2:16,g,null,`${GNAME[k]} · ${GTYPES[g.type]}`);x+=w+32;hh=Math.max(hh,h);});
+      y+=hh+40;}
+    H=y;
+  }else{ /* chat screen: shapes as paths, text as text layers, from the live preview layout */
+    const sr=screen.getBoundingClientRect();W=Math.round(sr.width);H=Math.round(sr.height);
+    const rel=el=>{const r=el.getBoundingClientRect();return [r.left-sr.left,r.top-sr.top,r.width,r.height];};
+    defs.push(`<clipPath id="screen-clip"><path d="${rectPath(W,H,37)}"/></clipPath>`);
+    let s=`<g id="chat/background">${svgFill(B.G.bg,rectPath(W,H,37),W,H,id(),defs,E.bg)}</g>`;
+    for(const [sel,name] of [['.status','chat/status-bar'],['.chat-head','chat/header'],['.inputbar','chat/input-bar']]){const [x,y,w,h]=rel($(sel));s+=`<rect id="${name}" x="${n2(x)}" y="${n2(y)}" width="${n2(w)}" height="${n2(h)}" fill="${E.header}"/>`;}
+    {const [x,y,w,h]=rel($('.island'));s+=`<rect id="chat/island" x="${n2(x)}" y="${n2(y)}" width="${n2(w)}" height="${n2(h)}" rx="${n2(h/2)}" fill="#0B0D12"/>`;}
+    s+=`<g id="chat/header-text">${svgTextsOf($('.status span'),sr)}${svgTextsOf($('.chat-head .name'),sr)}</g>`;
+    const [mx,my,mw,mh]=rel(msgsEl);defs.push(`<clipPath id="msgs-clip"><rect x="${n2(mx)}" y="${n2(my)}" width="${n2(mw)}" height="${n2(mh)}"/></clipPath>`);
+    let m='';
+    $$('#msgs .date').forEach((el,i)=>{const [x,y,w,h]=rel(el);m+=`<g id="chat/date-${i+1}"><rect x="${n2(x)}" y="${n2(y)}" width="${n2(w)}" height="${n2(h)}" rx="12" fill="${E.meta}" fill-opacity="0.18"/>${svgTextsOf(el,sr)}</g>`;});
+    $$('#msgs .avatar').forEach((el,i)=>{const [x,y,w,h]=rel(el);m+=`<g id="chat/avatar-${i+1}"><rect x="${n2(x)}" y="${n2(y)}" width="${n2(w)}" height="${n2(h)}" rx="${n2(w*.4)}" fill="${E.avatar}"/>${svgTextsOf(el,sr)}</g>`;});
+    $$('#msgs .sender').forEach(el=>{m+=svgTextsOf(el,sr);});
+    const st=S.stroke,on=st.level!=='none';let ns=0,nr=0;
+    $$('#msgs .bub').forEach(el=>{const [x,y,w,h]=rel(el),sent=el.dataset.side==='s',tail=el.dataset.tail==='1',k=sent?'sent':'recv';
+      let d=bubblePath(w,h,tail);if(sent)d=mirrorPath(d,w);
+      const lid=id();let line='';
+      if(on){defs.push(`<clipPath id="${lid}"><path d="${d}"/></clipPath>`);line=`<path id="inner-line" d="${d}" fill="none" stroke="${sent?E.sentline:E.recvline}" stroke-width="${n2(st.width*2)}" stroke-linejoin="round" clip-path="url(#${lid})"/>`;}
+      m+=`<g id="chat/${k}-bubble-${sent?++ns:++nr}" transform="translate(${n2(x)} ${n2(y)})">${svgFill(B.G[k],d,w,h,id(),defs,sent?E.sent:E.recv)}${line}</g>`;
+      m+=svgTextsOf(el.querySelector('.tx'),sr);});
+    $$('#msgs .meta span').forEach(el=>{m+=svgTextsOf(el,sr);});
+    s+=`<g id="chat/messages" clip-path="url(#msgs-clip)">${m}</g>`;
+    {const inp=$('#composeInput'),[x,y,w,h]=rel(inp);s+=`<g id="chat/input"><rect x="${n2(x)}" y="${n2(y)}" width="${n2(w)}" height="${n2(h)}" rx="${n2(h/2)}" fill="#FFFFFF" fill-opacity="0.92"/>${svgText(x+12,y+h/2+4.5,inp.value||inp.placeholder,13,'#7D838E')}</g>`;}
+    {const [x,y,w,h]=rel($('.send')),d=rectPath(w,h,w/2),cx=x+w/2,cy=y+h/2;
+      s+=`<g id="chat/send-button" transform="translate(${n2(x)} ${n2(y)})">${svgFill(B.G.accent,d,w,h,id(),defs,E.accent)}</g><path id="chat/send-icon" d="M${n2(cx)},${n2(cy+5)} V${n2(cy-5)} M${n2(cx-4.3)},${n2(cy-.7)} L${n2(cx)},${n2(cy-5)} L${n2(cx+4.3)},${n2(cy-.7)}" fill="none" stroke="${E.sendicon}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`;}
+    body=`<g id="chat/screen" clip-path="url(#screen-clip)">${s}</g>`;
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(W)}" height="${Math.ceil(H)}" viewBox="0 0 ${Math.ceil(W)} ${Math.ceil(H)}"><defs>${defs.join('')}</defs>${body}</svg>`;
+}
+$('#figmaMenu').addEventListener('click',e=>{
+  const b=e.target.closest('[data-fig]');if(!b)return;const scope=b.dataset.fig;
+  const svg=figmaSvg(scope);
+  if(!svg){toast('켜진 그라디언트가 없어요. 미리보기 옆 ‘그라데이션’에서 먼저 골라 주세요');return;}
+  copy(svg,{grad:'그라디언트 SVG를',sheet:'팔레트 시트 SVG를',chat:'채팅 화면 SVG를'}[scope],FIGMA_HINT);
+  $('#figmaMenu').open=false;
+});
+function showBox(text,title,onApply){
+  $('#copybox')?.remove();const box=document.createElement('div');box.id='copybox';box.className='copybox glass';
+  box.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b style="font-size:13px">${title}</b><span style="display:flex;gap:6px">${onApply?'<button class="btn dark" type="button" id="boxApply">불러오기</button>':''}<button class="btn" type="button" id="boxClose">닫기</button></span></div><textarea id="boxText" ${onApply?'':'readonly'}></textarea>`;
+  document.body.appendChild(box);const ta=$('#boxText');ta.value=text;ta.focus();if(!onApply)ta.select();
+  $('#boxClose').addEventListener('click',()=>box.remove());
+  if(onApply)$('#boxApply').addEventListener('click',()=>{if(onApply(ta.value))box.remove();});
+}
+function importText(t){try{const o=JSON.parse(t);if(loadState(o.state||o)){toast('JSON을 불러왔어요',true);return true;}}catch(_){}toast('이 스튜디오에서 내보낸 JSON이 아니에요');return false;}
+$('#copyCss').addEventListener('click',()=>copy(cssExport(),'테마 CSS를'));
+$('#copyHex').addEventListener('click',()=>copy(hexExport(),'HEX 목록을'));
+$('#copyJson').addEventListener('click',()=>copy(jsonExport(),'테마 JSON을'));
+$('#jsonFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>importText(rd.result);rd.readAsText(f);e.target.value='';});
+$('#pasteJson').addEventListener('click',()=>showBox('','내보낸 JSON을 붙여넣으세요',importText));
+let tt;function toast(m,withUndo){$('#toastMsg').textContent=m;$('#toastUndo').hidden=!withUndo;const t=$('#toast');t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),withUndo?3200:1900);}
+
+/* ---------- bubble shape presets ---------- */
+$('#shapeSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.dataset.v===S.shape)return;push();S.shape=b.dataset.v;render();toast(`${SHAPES[S.shape].n} 말풍선으로 바꿨어요`);});
+
+/* ---------- keyword → tags (small dictionary) ---------- */
+/* ---------- photo → representative colors (k-means in the browser, nothing uploaded) ---------- */
+function extractColors(img,k=6){
+  const W=72,H=Math.max(1,Math.round(72*img.naturalHeight/img.naturalWidth)),cv=document.createElement('canvas');cv.width=W;cv.height=H;
+  const ctx=cv.getContext('2d');ctx.drawImage(img,0,0,W,H);const d=ctx.getImageData(0,0,W,H).data,px=[];
+  for(let i=0;i<d.length;i+=4)if(d[i+3]>128)px.push([d[i],d[i+1],d[i+2]]);
+  if(!px.length)return [];
+  let cent=Array.from({length:k},(_,i)=>px[Math.floor((i+.5)*px.length/k)].slice());
+  let lab=new Array(px.length).fill(0);
+  for(let it=0;it<10;it++){
+    px.forEach((p,i)=>{let b=0,bd=1e9;cent.forEach((c,j)=>{const dd=(p[0]-c[0])**2+(p[1]-c[1])**2+(p[2]-c[2])**2;if(dd<bd){bd=dd;b=j;}});lab[i]=b;});
+    const sum=cent.map(()=>[0,0,0,0]);px.forEach((p,i)=>{const s=sum[lab[i]];s[0]+=p[0];s[1]+=p[1];s[2]+=p[2];s[3]++;});
+    cent=sum.map((s,j)=>s[3]?[s[0]/s[3],s[1]/s[3],s[2]/s[3]]:cent[j]);
+  }
+  const cnt=cent.map(()=>0);lab.forEach(l=>cnt[l]++);
+  const out=[];
+  cent.map((c,j)=>({hex:rgbToHex(...c),n:cnt[j]/px.length})).filter(x=>x.n>.02).sort((a,b)=>b.n-a.n).forEach(x=>{
+    if(!out.some(o=>contrast(o.hex,x.hex)<1.12&&hueDiff(hexToHsl(o.hex)[0],hexToHsl(x.hex)[0])<14))out.push(x);});
+  return out.slice(0,5);
+}
+$('#photoFile').addEventListener('change',e=>{
+  const f=e.target.files[0];e.target.value='';if(!f)return;
+  const rd=new FileReader();rd.onload=()=>{const img=new Image();img.onload=()=>{
+    const cols=extractColors(img);if(!cols.length){toast('이 사진에서는 색을 뽑지 못했어요');return;}
+    /* base = the most frequent color that has real chroma (skips white walls, black backgrounds) */
+    const pick=cols.find(c=>{const [,s,l]=hexToHsl(c.hex);return s>.18&&l>.15&&l<.88;})||cols[0];
+    const box=$('#photoOut');box.hidden=false;
+    box.innerHTML=`<div class="ph"><img src="${rd.result}" alt="고른 사진"><div class="sugg">${cols.map(c=>`<button type="button" data-photo="${c.hex}" aria-pressed="${c.hex===pick.hex}" title="${Math.round(c.n*100)}%"><i style="background:${c.hex}"></i>${c.hex}</button>`).join('')}</div></div><p class="note">사진은 이 브라우저 안에서만 읽어요. 다른 색을 누르면 그 색이 기준색이 됩니다.</p>`;
+    push();setBase(pick.hex,true);recommend();toast(`사진 대표색 ${pick.hex}를 기준색으로 썼어요`,true);
+  };img.src=rd.result;};rd.readAsDataURL(f);
+});
+$('#photoOut').addEventListener('click',e=>{const b=e.target.closest('[data-photo]');if(!b)return;push();setBase(b.dataset.photo,true);
+  $$('#photoOut [data-photo]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));recommend();});
+
+/* ---------- PNG: redraw the live preview onto a canvas from its layout ---------- */
+function drawTextOf(ctx,el,sr,color){
+  const cs=getComputedStyle(el);ctx.font=cs.font;ctx.fillStyle=color||cs.color;ctx.textBaseline='middle';
+  const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let node;
+  while((node=walker.nextNode())){
+    const t=node.textContent;let line=null;const flush=()=>{if(line&&line.s.trim())ctx.fillText(line.s,line.x,line.y);line=null;};
+    let i=0;for(const ch of t){const r=document.createRange();r.setStart(node,i);r.setEnd(node,i+ch.length);i+=ch.length;
+      const rc=r.getClientRects()[0];if(!rc)continue;const y=rc.top-sr.top+rc.height/2,x=rc.left-sr.left;
+      if(!line||Math.abs(line.y-y)>3){flush();line={s:'',x,y};}line.s+=ch;}
+    flush();
+  }
+}
+function rrect(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,h,r):ctx.rect(x,y,w,h);}
+function renderPNG(scale){
+  closePop();hl.hidden=true;
+  const sr=screen.getBoundingClientRect(),W=sr.width,H=sr.height,cv=document.createElement('canvas');cv.width=Math.round(W*scale);cv.height=Math.round(H*scale);
+  const ctx=cv.getContext('2d');ctx.scale(scale,scale);if(S.gray)ctx.filter='grayscale(1)';
+  const E=B.E,rel=el=>{const r=el.getBoundingClientRect();return [r.left-sr.left,r.top-sr.top,r.width,r.height];};
+  /* canvas gradient over a box, same direction mapping as the SVG/CSS version */
+  /* paint a gradient spec into a box (same geometry as the SVG/CSS versions); caller sets the clip */
+  const paint=(g,x,y,w,h,mirror)=>{ctx.save();
+    if(g.type==='linear'){const [x1,y1,x2,y2]=lineEnds(g.angle,w,h,mirror),lg=ctx.createLinearGradient(x+x1,y+y1,x+x2,y+y2);g.stops.forEach(s=>lg.addColorStop(s.at,s.c));ctx.fillStyle=lg;ctx.fillRect(x,y,w,h);}
+    else if(g.type==='radial'){ctx.translate(x,y);ctx.scale(w,h);const cx=mirror?1-g.center[0]:g.center[0],rg=ctx.createRadialGradient(cx,g.center[1],0,cx,g.center[1],radR(g.center));g.stops.forEach(s=>rg.addColorStop(s.at,s.c));ctx.fillStyle=rg;ctx.fillRect(0,0,1,1);}
+    else{ctx.fillStyle=g.base;ctx.fillRect(x,y,w,h);
+      [...g.points].reverse().forEach(p=>{const px=x+(mirror?1-p.x:p.x)*w,py=y+p.y*h,R=g.spread*Math.hypot(Math.max(p.x,1-p.x)*w,Math.max(p.y,1-p.y)*h),rg=ctx.createRadialGradient(px,py,0,px,py,R);
+        rg.addColorStop(0,p.c);rg.addColorStop(1,rgba0(p.c));ctx.fillStyle=rg;ctx.fillRect(x,y,w,h);});}
+    ctx.restore();};
+  rrect(ctx,0,0,W,H,37);ctx.clip();ctx.fillStyle=E.bg;ctx.fillRect(0,0,W,H);
+  if(B.G.bg)paint(B.G.bg,0,0,W,H,false);
+  for(const sel of ['.status','.chat-head','.inputbar']){const [x,y,w,h]=rel($(sel));ctx.fillStyle=E.header;ctx.fillRect(x,y,w,h);}
+  drawTextOf(ctx,$('.status span'),sr);drawTextOf(ctx,$('.chat-head .name'),sr);
+  {const [x,y,w,h]=rel($('.island'));ctx.fillStyle='#0B0D12';rrect(ctx,x,y,w,h,h/2);ctx.fill();}
+  {const ic=$$('.chat-head svg');ctx.strokeStyle=E.headtext;ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';
+    const [x,y]=rel(ic[0]);ctx.beginPath();ctx.moveTo(x+12.5,y+4);ctx.lineTo(x+6.7,y+10);ctx.lineTo(x+12.5,y+16);ctx.stroke();
+    const [mx,my]=rel(ic[2]);[6,10,14].forEach(dy=>{ctx.beginPath();ctx.moveTo(mx+3.5,my+dy);ctx.lineTo(mx+16.5,my+dy);ctx.stroke();});
+    const [sx,sy]=rel(ic[1]);ctx.beginPath();ctx.arc(sx+9,sy+9,5,0,Math.PI*2);ctx.moveTo(sx+12.7,sy+12.7);ctx.lineTo(sx+16.5,sy+16.5);ctx.stroke();}
+  /* messages, clipped to the scroll area */
+  const [mx,my,mw,mh]=rel(msgsEl);ctx.save();ctx.beginPath();ctx.rect(mx,my,mw,mh);ctx.clip();
+  $$('#msgs .date').forEach(el=>{const [x,y,w,h]=rel(el);ctx.save();ctx.globalAlpha=.18;ctx.fillStyle=E.meta;rrect(ctx,x,y,w,h,12);ctx.fill();ctx.restore();drawTextOf(ctx,el,sr);});
+  $$('#msgs .avatar').forEach(el=>{const [x,y,w,h]=rel(el);ctx.fillStyle=E.avatar;rrect(ctx,x,y,w,h,w*.4);ctx.fill();drawTextOf(ctx,el,sr);});
+  $$('#msgs .sender').forEach(el=>drawTextOf(ctx,el,sr));
+  const st=S.stroke,on=st.level!=='none';
+  $$('#msgs .bub').forEach(el=>{const [x,y,w,h]=rel(el),sent=el.dataset.side==='s',tail=el.dataset.tail==='1';
+    ctx.save();ctx.translate(x,y);if(sent){ctx.translate(w,0);ctx.scale(-1,1);}
+    const p=new Path2D(bubblePath(w,h,tail)),bg=B.G[sent?'sent':'recv'];
+    if(bg){ctx.save();ctx.clip(p);paint(bg,0,0,w,h,sent);ctx.restore();}else{ctx.fillStyle=sent?E.sent:E.recv;ctx.fill(p);}
+    if(on){ctx.save();ctx.clip(p);ctx.strokeStyle=sent?E.sentline:E.recvline;ctx.lineWidth=+st.width*2;ctx.lineJoin='round';ctx.stroke(p);ctx.restore();}
+    ctx.restore();drawTextOf(ctx,el.querySelector('.tx'),sr);
+    el.querySelectorAll('a').forEach(a=>{for(const rc of a.getClientRects()){ctx.fillStyle=getComputedStyle(a).color;ctx.globalAlpha=.5;ctx.fillRect(rc.left-sr.left,rc.bottom-sr.top-2,rc.width,2);ctx.globalAlpha=1;}});});
+  $$('#msgs .meta span').forEach(el=>drawTextOf(ctx,el,sr));
+  ctx.restore();
+  {const inp=$('#composeInput'),[x,y,w,h]=rel(inp);ctx.fillStyle='rgba(255,255,255,.92)';rrect(ctx,x,y,w,h,h/2);ctx.fill();
+    ctx.font=getComputedStyle(inp).font;ctx.fillStyle='#7d838e';ctx.textBaseline='middle';ctx.fillText(inp.value||inp.placeholder,x+12,y+h/2);}
+  {const [x,y,w,h]=rel($('.inputbar .plus'));ctx.strokeStyle=E.headtext;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x+w/2,y+h/2-7);ctx.lineTo(x+w/2,y+h/2+7);ctx.moveTo(x+w/2-7,y+h/2);ctx.lineTo(x+w/2+7,y+h/2);ctx.stroke();}
+  {const [x,y,w,h]=rel($('.send'));ctx.save();ctx.beginPath();ctx.arc(x+w/2,y+h/2,w/2,0,Math.PI*2);ctx.clip();if(B.G.accent)paint(B.G.accent,x,y,w,h,false);else{ctx.fillStyle=E.accent;ctx.fillRect(x,y,w,h);}ctx.restore();
+    ctx.strokeStyle=E.sendicon;ctx.lineWidth=2.4;ctx.lineCap='round';ctx.lineJoin='round';const cx=x+w/2,cy=y+h/2;ctx.beginPath();ctx.moveTo(cx,cy+5);ctx.lineTo(cx,cy-5);ctx.moveTo(cx-4.3,cy-.7);ctx.lineTo(cx,cy-5);ctx.lineTo(cx+4.3,cy-.7);ctx.stroke();}
+  return cv;
+}
+let pngScale=2,pngCanvas=null;
+function showPNG(){
+  try{pngCanvas=renderPNG(pngScale);}catch(err){toast('이미지를 만들지 못했어요');return;}
+  $('#pngImg').src=pngCanvas.toDataURL('image/png');$('#pngOv').hidden=false;
+  $$('#pngScale button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.v===pngScale)));$('#pngCopy').focus();
+}
+$('#pngBtn').addEventListener('click',()=>{(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(showPNG);});
+$('#pngScale').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;pngScale=+b.dataset.v;showPNG();});
+$('#pngClose').addEventListener('click',()=>{$('#pngOv').hidden=true;});
+$('#pngOv').addEventListener('click',e=>{if(e.target.id==='pngOv')$('#pngOv').hidden=true;});
+$('#pngCopy').addEventListener('click',()=>{
+  if(!pngCanvas)return;
+  pngCanvas.toBlob(async blob=>{try{await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);toast('이미지를 복사했어요');}
+    catch(_){toast('이 화면에서는 이미지 복사가 막혀 있어요. 이미지를 길게 누르거나 우클릭해서 저장하세요');}},'image/png');
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#pngOv').hidden=true;});
+
+/* ---------- embedded in 카톡 테마 편집: send the current theme colors to the parent ---------- */
+const EMBED=(()=>{try{return window.parent!==window;}catch(_){return true;}})();
+if(EMBED){document.documentElement.classList.add('embed');$('#toKakao').hidden=false;$('#copyCss').classList.remove('dark');}
+/* inside the site: switch the page instead of loading index.html again (keeps both pages' work) */
+$('#toEditor').addEventListener('click',e=>{if(!EMBED)return;e.preventDefault();parent.postMessage({type:'kt-go-editor'},'*');});
+$('#toKakao').addEventListener('click',()=>{
+  const C=B.C,E=B.E;
+  parent.postMessage({type:'kt-studio-apply',mode:S.mode,grad:gradOn(S.grad).length>0,
+    colors:{bg:C.bg,header:C.header,headtext:C.headtext,recv:E.recv,recvtext:E.recvtext,sent:E.sent,senttext:E.senttext,meta:C.meta,accent:C.accent,sendicon:C.sendicon},roles:{...B.R}},'*');
+});
+
+/* ---------- boot ---------- */
+(function boot(){
+  const st=curatedState(CURATED[0]);S.pal=st.pal;S.mode=st.mode;
+  render();renderMsgs();renderSaved();recommend();
+  new ResizeObserver(()=>drawBubbles()).observe(msgsEl);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>drawBubbles());
+})();
+})();
+</script>
+
+<script src="sound.js"></script>
+</body></html>
