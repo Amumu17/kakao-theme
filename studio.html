@@ -479,7 +479,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
       <div class="sec-h"><h2>다듬기 · 색 넓히는 방식</h2><span class="hint">누르기 전에 결과 미리보기</span></div>
       <div class="rules" id="rules"></div>
       <div class="strip" id="strip"></div>
-      <div class="arr-row"><button class="btn dark arr-btn" type="button" data-arrange><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3"/><circle cx="15.5" cy="15.5" r="1.3"/><circle cx="15.5" cy="8.5" r="1.3"/><circle cx="8.5" cy="15.5" r="1.3"/></svg>팔레트 안에서 배치 바꾸기</button><span class="hint" id="arrNote">누를 때마다 위 6색으로 배경·말풍선·버튼을 다르게 짜요</span></div>
+      <div class="arr-row"><button class="btn dark arr-btn" type="button" data-arrange><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3"/><circle cx="15.5" cy="15.5" r="1.3"/><circle cx="15.5" cy="8.5" r="1.3"/><circle cx="8.5" cy="15.5" r="1.3"/></svg>팔레트 안에서 배치 바꾸기</button><span class="hint" id="arrNote">누를 때마다 위 6색으로 배경·상단·두 말풍선·버튼 색을 다르게 짜요 (선 켜기·두께·모양은 지금 설정 그대로)</span></div>
       <p class="note" id="stripNote"></p>
     </div>
 
@@ -580,7 +580,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
     <div class="line-ctl"><span>말풍선 모양</span>
       <div class="seg" id="shapeSeg"><button type="button" data-v="round">둥근</button><button type="button" data-v="square">각진</button><button type="button" data-v="pill">알약</button></div>
     </div>
-    <button class="btn dark arr-btn" type="button" data-arrange title="지금 팔레트 6색 안에서 배경·말풍선·버튼 배치를 바꿔요"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3"/><circle cx="15.5" cy="15.5" r="1.3"/><circle cx="15.5" cy="8.5" r="1.3"/><circle cx="8.5" cy="15.5" r="1.3"/></svg>배치 바꾸기</button>
+    <button class="btn dark arr-btn" type="button" data-arrange title="지금 팔레트 6색 안에서 배경·상단·두 말풍선·버튼 배치를 모두 바꿔요"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3"/><circle cx="15.5" cy="15.5" r="1.3"/><circle cx="15.5" cy="8.5" r="1.3"/><circle cx="8.5" cy="15.5" r="1.3"/></svg>배치 바꾸기</button>
     <div class="stage-bar">
       <button class="chip-toggle" id="undoBtn" type="button" disabled title="되돌리기 (Ctrl/⌘+Z)"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>되돌리기</button>
       <button class="chip-toggle" id="cmpBtn" type="button" disabled title="누르고 있는 동안 직전 상태를 보여줘요"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="8" height="14" rx="2"/><rect x="13" y="5" width="8" height="14" rx="2"/></svg>누르는 동안 이전 안</button>
@@ -800,16 +800,30 @@ function modeRoles(R,mode){const d=isDark(R.base);return mode==='dark'&&!d?toDar
 
 /* ---------- build: state → colors (pure, also used to score recommendations) ---------- */
 const LINE_MAP={shades:[2,4],gradient:[1,4],analog:[1,3],comp:[1,3],split:[3,4],spot:[3,5],classy:[2,4],triad:[2,3]};
-const LEVELS={none:{min:0,mute:0,emph:'fill'},soft:{min:1.6,mute:.3,emph:'fill'},bold:{min:2,mute:0,emph:'half'}};
+const LEVELS={none:{min:0,mute:0,emph:'fill'},soft:{min:1.4,mute:0,emph:'fill'},bold:{min:2,mute:0,emph:'half'}};
+/* the line is part of the design, not a border: it is the bubble's own color one step deeper (lighter on dark bubbles),
+   with its hue leaning toward a palette partner color — gently for 은은하게, more for 선명하게 */
+function harmonLine(fill,partner,level,min){
+  const f=hexToOk(fill),q=hexToOk(partner),bold=level==='bold',dir=f[0]>.62?-1:1;
+  /* chroma never runs far past the bubble's own (a white bubble gets a quiet tint, not a loud color) */
+  const H=f[1]<.02?q[2]:hueLerp(f[2],q[2],bold?.4:.25);
+  const C=Math.min(Math.max(f[1]*(bold?1.25:1.1),bold?.07:.045),Math.max(f[1],q[1]*(bold?.6:.4)),.16);
+  /* reach the contrast by going deeper in lightness only — saturation stays calm */
+  let L=f[0]+dir*(bold?.16:.08),c=okToHex(L,C,H);
+  for(let i=0;i<16&&contrast(c,fill)<min;i++){L+=dir*.025;c=okToHex(L,C,H);}
+  return c;
+}
+/* line on/off · strength · width are the user's settings: recommendations, presets, moods and arrangements only change line colors */
+const LEVEL_N={none:'없음',soft:'은은하게',bold:'선명하게'};
 function buildFrom(st){
   const R=modeRoles(st.pal.roles,st.mode),o=st.over||{},raw=st.raw||{},O=(k,v)=>o[k]||v,dark=isDark(R.base),ink=dark?R.base:R.neutral;
-  const recv=O('recv',dark?mix(R.base,R.neutral,.16):'#FFFFFF');
+  const recv=O('recv',R.recv||(dark?mix(R.base,R.neutral,.16):'#FFFFFF'));
   const pick={bg:O('bg',R.base),sent:O('sent',R.sub)};
   const bg=raw.bg?pick.bg:ensureAway(pick.bg,recv,1.2);
   let sent=raw.sent?pick.sent:ensureAway(pick.sent,recv,1.5);
   /* if neither tinted text nor white/black reaches AA on the bubble, nudge the bubble's lightness away from its best text */
   if(!raw.sent&&!o.senttext){const t=bestText(sent,R.neutral,ink);if(contrast(t,sent)<4.5)sent=ensureAway(sent,t,4.5);}
-  const header=O('header',dark?mix(bg,R.neutral,.06):mix(bg,'#FFFFFF',.55));
+  const header=O('header',R.header||(dark?mix(bg,R.neutral,.06):mix(bg,'#FFFFFF',.55)));
   const accent=o.accent||ensureContrast(ensureContrast(R.accent,bg,3),header,3); /* CTA readable on both surfaces */
   const C={bg,header,recv,sent,accent,
     headtext:O('headtext',bestText(header,R.neutral,ink)),
@@ -840,8 +854,9 @@ function buildFrom(st){
   }
   const map=LINE_MAP[st.pal.rule],vs=side=>s.pos==='outline'?bg:(side==='s'?(G.sent?G.sent.avg:E.sent):(G.recv?G.recv.avg:E.recv));
   /* with a gradient bubble, its line follows the palette color at the gradient's end */
-  const line=(i,side)=>{const g=G[side==='s'?'sent':'recv'];let c=g?g.endColor:(st.pal.swatches[i]||R.neutral);if(LV.mute)c=mix(c,bg,LV.mute);return on?softFix(c,vs(side),LV.min):c;};
-  let lr=line(map[0],'r'),ls=line(map[1],'s');
+  const line=(i,side,own)=>{const g=G[side==='s'?'sent':'recv'],partner=g?g.endColor:(own||st.pal.swatches[i]||R.neutral);
+    if(!on)return partner;const c=harmonLine(vs(side),partner,s.level,LV.min);return contrast(c,vs(side))>=LV.min?c:ensureContrast(c,vs(side),LV.min);};
+  let lr=line(map[0],'r',R.lr),ls=line(map[1],'s',R.ls);
   const [h1,s1]=hexToHsl(lr),[h2,s2]=hexToHsl(ls);
   if(on&&(s1<.1||s2<.1||hueDiff(h1,h2)<25)&&contrast(lr,ls)<1.3) ls=ensureContrast(ls,vs('s'),contrast(lr,vs('s'))*1.45);
   C.recvline=E.recvline=O('recvline',lr);C.sentline=E.sentline=O('sentline',ls);
@@ -937,7 +952,7 @@ const meshPart=g=>GPARTS.find(k=>g.parts[k]&&g.parts[k].on&&g.parts[k].type==='m
 /* ---------- state ---------- */
 const S={
   pal:{base:'#8BEABB',rule:'shades',tags:{tone:null,temp:null,theme:null},swatches:[],locks:[false,false,false,false,false,false],roles:{},curated:0,baseFixed:false},
-  stroke:{level:'none',pos:'inset',width:1.5}, /* the line is always an inner line */
+  stroke:{level:'soft',pos:'inset',width:1.5}, /* the line is always an inner line, and on by default: it's part of the design */
   over:{},raw:{},mode:'light',sample:'short',gray:false,shape:'round',
   grad:null
 };
@@ -1056,15 +1071,15 @@ function recPal(look,rule){
   pal.roles=rolesFor(pal);return pal;
 }
 function makeCand(look,rule,kind){
-  const pal=recPal(look,rule),mode=MOOD[look.mood].dark?'dark':'light';
-  const b=buildFrom({pal,stroke:S.stroke,over:{},raw:{},mode,grad:S.grad}),E=b.E;
-  if(checksFor(b,S.stroke).some(x=>x.g==='text'&&!x.ok))return null;          /* readability is a hard filter */
+  const pal=recPal(look,rule),mode=MOOD[look.mood].dark?'dark':'light',stroke={...S.stroke};
+  const b=buildFrom({pal,stroke,over:{},raw:{},mode,grad:S.grad}),E=b.E;
+  if(checksFor(b,stroke).some(x=>!x.ok))return null;                                  /* every readability check is a hard filter */          /* readability is a hard filter */
   let score=(contrast(E.recv,E.bg)>=1.2?1:0)+(contrast(E.sent,E.recv)>=1.5?1:0)+(contrast(E.accent,E.bg)>=3?1:0);
   const U=S.pal.tags.theme&&USE[S.pal.tags.theme];
   if(U){const mi=U.moods.indexOf(look.mood);if(mi>=0)score+=1.6-mi*.35;if(U.acc.includes(kind))score+=.7;if(U.temp&&!S.pal.tags.temp&&look.temp===U.temp)score+=.3;}
   const key=`${look.mood}|${kind}|${look.adir}|${look.int}`;
   if(LAST_KEYS.has(key))score-=1.5;                                             /* 다시 추천 → new faces first */
-  return {pal,mode,E,kind,look,key,score:score+Math.random()*.9,bg:hexToOk(E.bg),sub:hexToOk(E.sent),acc:hexToOk(E.accent)};
+  return {pal,mode,E,stroke,kind,look,key,score:score+Math.random()*.9,bg:hexToOk(E.bg),sub:hexToOk(E.sent),acc:hexToOk(E.accent)};
 }
 const okNear=(a,b)=>Math.abs(a[0]-b[0])<.02&&Math.abs(a[1]-b[1])<.015&&(Math.max(a[1],b[1])<.03||hueDiff(a[2],b[2])<8);
 const isDup=(a,b)=>okNear(a.bg,b.bg)&&okNear(a.sub,b.sub)&&okNear(a.acc,b.acc);
@@ -1110,32 +1125,47 @@ function similar(i){
    Every (bg source k, bubble i, button j) is built and checked; unreadable ones are dropped, the rest are queued in a
    shuffled, varied order so each click shows a different arrangement until the queue wraps. */
 let ARR={sig:'',queue:[],pos:0};
+/* each arrangement casts the 6 swatches into every surface: background (3 strengths) · top & input bar (soft / tinted / solid) ·
+   received bubble (white or tinted) · my bubble · button · text tinted by the background. Candidates are sampled, built and
+   checked; the queue is ordered so the background and both bubbles change on every click. */
 function arrangements(){
-  const P=S.pal,sw=P.swatches,darkForm=isDark(P.roles.base||'#FFFFFF'),out=[];
-  for(let k=0;k<6;k++)for(let i=0;i<6;i++)for(let j=0;j<6;j++){
-    if(i===j)continue;const [,ck,hk]=hexToOk(sw[k]),bgH=hk,bgC=Math.min(ck*.35,darkForm?.03:.035);
-    const roles={base:darkForm?okToHex(.18,bgC,bgH):okToHex(.93,bgC,bgH),sub:sw[i],accent:sw[j],neutral:darkForm?okToHex(.94,.012,bgH):okToHex(.26,.02,bgH)};
-    const so=hexToOk(sw[i]),ao=hexToOk(sw[j]);
+  /* the user's settings (line on/off · strength · width, shape, gradients) are inputs: an arrangement only re-casts colors */
+  const stroke={...S.stroke},lineOn=stroke.level!=='none';
+  const P=S.pal,sw=P.swatches,darkForm=isDark(P.roles.base||'#FFFFFF'),ok=sw.map(hexToOk),out=[],seen=new Set(),r6=()=>Math.floor(Math.random()*6),r3=()=>Math.floor(Math.random()*3);
+  const BG_L=darkForm?[.15,.19,.24]:[.955,.915,.87],BG_C=darkForm?[.025,.04,.055]:[.03,.05,.075];
+  for(let n=0;n<900&&out.length<180;n++){
+    const k=r6(),i=r6(),j=r6(),h=r6(),r=r6(),bl=r3(),hd=r3(),rc=Math.random()<.5?0:1,la=lineOn?r6():-1,lb=lineOn?r6():-1;
+    if(i===j)continue;const key=[k,i,j,h,r,bl,hd,rc,la,lb].join('');if(seen.has(key))continue;seen.add(key);
+    const [,ck,hk]=ok[k],[,ch,hh]=ok[h],[,cr,hr]=ok[r];
+    const roles={base:okToHex(BG_L[bl],Math.min(ck*.7,BG_C[bl]),hk),sub:sw[i],accent:sw[j],neutral:darkForm?okToHex(.94,.012,hk):okToHex(.26,.02,hk)};
+    if(hd===1)roles.header=okToHex(darkForm?.25:.935,Math.min(ch*.55,.055),hh);
+    if(hd===2)roles.header=sw[h];
+    if(rc)roles.recv=okToHex(darkForm?.31:.985,Math.min(cr*.45,darkForm?.035:.028),hr);
+    if(lineOn){roles.lr=sw[la];roles.ls=sw[lb];}
+    const so=ok[i],ao=ok[j];
     if(Math.abs(so[0]-ao[0])<.06&&(hueDiff(so[2],ao[2])<20||Math.max(so[1],ao[1])<.04))continue;   /* bubble and button must read as two colors */
-    const pal={...P,roles,curated:-1},b=buildFrom({pal,stroke:S.stroke,over:{},raw:{},mode:S.mode,grad:S.grad}),E=b.E;
-    if(checksFor(b,S.stroke).some(x=>x.g==='text'&&!x.ok))continue;
-    if(contrast(E.sent,E.recv)<1.35||contrast(E.sent,E.bg)<1.2)continue;                 /* my bubble must stand out */
-    let sc=(contrast(E.sent,E.recv)>=1.5?1:0)+(contrast(E.accent,E.bg)>=3?1:0)+ao[1]*4+Math.random()*.8;
-    if(roles.sub===P.roles.sub&&roles.accent===P.roles.accent)sc-=3;
-    out.push({k,i,j,roles,sc,E});}
-  /* order for variety: best first, then always change the bubble or button from the previous pick */
-  out.sort((a,b)=>b.sc-a.sc);const q=[];
-  const far=(c,l,strict)=>c.i!==l.i&&c.j!==l.j&&(!strict||(c.k!==l.k&&hueDiff(hexToOk(c.E.sent)[2],hexToOk(l.E.sent)[2])>=20));
-  while(out.length){const last=q[q.length-1];let n=last?out.findIndex(c=>far(c,last,true)):0;if(n<0)n=out.findIndex(c=>far(c,last,false));if(n<0)n=0;q.push(out.splice(n,1)[0]);}
-  return q.slice(0,24);
+    const pal={...P,roles,curated:-1},b=buildFrom({pal,stroke,over:{},raw:{},mode:S.mode,grad:S.grad}),E=b.E;
+    if(checksFor(b,stroke).some(x=>!x.ok))continue;                                   /* every readability check, lines included */
+    if(contrast(E.sent,E.recv)<1.35||contrast(E.sent,E.bg)<1.2||contrast(E.recv,E.bg)<1.12)continue; /* bubbles stand out from the room */
+    if(hd===2&&contrast(E.header,E.bg)<1.15)continue;
+    const sc=(contrast(E.sent,E.recv)>=1.5?1:0)+(contrast(E.accent,E.bg)>=3?1:0)+ao[1]*3+Math.random()*1.2;
+    out.push({k,i,j,h,r,hd,rc,la,lb,stroke,roles,E,sc,bgo:hexToOk(E.bg)});}
+  out.sort((x,y)=>y.sc-x.sc);
+  /* every click: a visibly different background (hue 25°+ or lightness .035+), a new bubble and button, and a different bar */
+  const far=(c,l,strict)=>c.i!==l.i&&c.j!==l.j&&(hueDiff(c.bgo[2],l.bgo[2])>=25||Math.abs(c.bgo[0]-l.bgo[0])>=.035)&&(!strict||(c.E.header!==l.E.header&&c.E.recv!==l.E.recv&&(!lineOn||c.E.sentline!==l.E.sentline)));
+  const q=[];
+  const fresh=c=>q.slice(-3).every(l=>hueDiff(c.bgo[2],l.bgo[2])>=25||Math.abs(c.bgo[0]-l.bgo[0])>=.035); /* no A→B→A backgrounds */
+  while(out.length&&q.length<24){const last=q[q.length-1];let n=last?out.findIndex(c=>far(c,last,true)&&fresh(c)):0;if(n<0&&last)n=out.findIndex(c=>far(c,last,true));if(n<0)n=out.findIndex(c=>far(c,last,false));if(n<0)n=0;q.push(out.splice(n,1)[0]);}
+  return q;
 }
 function arrange(){
-  const P=S.pal,sig=P.swatches.join()+S.mode+S.stroke.level;
+  const P=S.pal,sig=P.swatches.join()+S.mode+S.stroke.level+S.stroke.width+JSON.stringify(S.grad);
   if(ARR.sig!==sig){ARR={sig,queue:arrangements(),pos:0};}
   if(!ARR.queue.length)return toast('이 팔레트로는 가독성을 지키는 다른 배치가 없어요');
   const a=ARR.queue[ARR.pos%ARR.queue.length];ARR.pos++;
   const n=ARR.queue.length,at=((ARR.pos-1)%n)+1;
-  push();P.roles={...a.roles};P.curated=-1;P.arr={k:a.k,i:a.i,j:a.j,at,n,sig:JSON.stringify(P.roles)};render();
+  push();P.roles={...a.roles};P.curated=-1;if(a.la>=0){delete S.over.recvline;delete S.over.sentline;}
+  P.arr={k:a.k,i:a.i,j:a.j,h:a.hd?a.h:-1,r:a.rc?a.r:-1,la:a.la>=0?a.la:null,lb:a.lb>=0?a.lb:null,at,n,sig:JSON.stringify(P.roles)};render();
   toast(`배치 ${at}/${n} · 팔레트 안에서 바꿨어요${Object.keys(S.over).length?' (직접 고친 부위는 유지)':''}`,true);
 }
 document.addEventListener('click',e=>{if(e.target.closest('[data-arrange]'))arrange();});
@@ -1161,7 +1191,7 @@ function recCopy(r){const sN=colorName(r.E.sent),aN=colorName(r.E.accent);
     :r.kind==='near'?[`${aN} 이음`,`이웃한 ${aN}${ro(aN)} 자연스럽게 이어져요`]
     :r.kind==='opp'?[`${aN} 포인트`,`버튼이 ${aN}${ro(aN)} 또렷하게 튀어요`]
     :[`${aN} 살짝`,`${aN} 포인트가 부드럽게 대비돼요`];}
-function applyState(pal,mode){push();S.pal=JSON.parse(JSON.stringify(pal));S.pal.tags=normTags(S.pal.tags);S.mode=mode;S.over={};S.raw={};closePop();render();}
+function applyState(pal,mode,stroke){push();S.pal=JSON.parse(JSON.stringify(pal));S.pal.tags=normTags(S.pal.tags);S.mode=mode;if(stroke)S.stroke={...stroke,pos:'inset'};S.over={};S.raw={};closePop();render();}
 
 /* ---------- bubble geometry ---------- */
 const SHAPES={round:{n:'둥근',radius:16,tailCorner:4,tailSize:6},square:{n:'각진',radius:6,tailCorner:1.5,tailSize:5},pill:{n:'알약',radius:99,tailCorner:99,tailSize:0}};
@@ -1250,24 +1280,24 @@ function renderLeft(){
   $('#baseColor').value=P.base.toLowerCase();$('#baseHex').value=P.base;$('#baseSw').style.background=P.base;
   $('#baseFix').innerHTML=P.baseFixed?`<span class="basefix"><i style="background:${P.base}"></i>기준색 ${P.base} 그대로${(P.tags.tone||P.tags.temp)?' · 무드·온도는 추천에만':''}<button type="button" id="unfix" aria-label="기준색 고정 해제" title="고정 해제 (무드·온도를 팔레트에도 적용)">✕</button></span>`:'';
   $('#rules').innerHTML=RULES.map(([r,n,d])=>`<button class="rule" type="button" data-rule="${r}" aria-pressed="${P.rule===r}" title="${d}"><span class="bar">${palOf(P,r).map(c=>`<i style="background:${c}"></i>`).join('')}</span>${n}</button>`).join('');
-  const map=LINE_MAP[P.rule];
+  const AR=P.arr&&P.arr.sig===JSON.stringify(P.roles)&&P.arr.la!=null?P.arr:null,map=AR?[AR.la,AR.lb]:LINE_MAP[P.rule];
   $('#strip').innerHTML=P.swatches.map((c,i)=>{
     let ln='';if(on){if(map[0]===i)ln+='<em class="tag">받은 선</em>';if(map[1]===i)ln+='<em class="tag">내 선</em>';}
     const A=P.arr&&P.arr.sig===JSON.stringify(P.roles)?P.arr:null;
-    if(A){if(A.k===i)ln+='<em class="tag role">배경</em>';if(A.i===i)ln+='<em class="tag role">말풍선</em>';if(A.j===i)ln+='<em class="tag role">버튼</em>';}
+    if(A){if(A.k===i)ln+='<em class="tag role">배경</em>';if(A.h===i)ln+='<em class="tag role">상단</em>';if(A.r===i)ln+='<em class="tag role">받은</em>';if(A.i===i)ln+='<em class="tag role">내 말풍선</em>';if(A.j===i)ln+='<em class="tag role">버튼</em>';}
     return `<div class="sw" style="background:${c};color:${fgOn(c)}"><button class="lock" type="button" data-lock="${i}" aria-pressed="${P.locks[i]}" aria-label="${c} 잠그기" title="잠그면 다시 추천·섞기에도 남아요"><svg viewBox="0 0 24 24">${P.locks[i]?LOCK_ON:LOCK_OFF}</svg></button><div class="lab">${ln}<span>${c.slice(1)}</span></div></div>`;}).join('');
-  {const A=P.arr&&P.arr.sig===JSON.stringify(P.roles)?P.arr:null;$('#arrNote').textContent=A?`배치 ${A.at}/${A.n} · ${A.k+1}번 칸 배경 · ${A.i+1}번 말풍선 · ${A.j+1}번 버튼`:'누를 때마다 위 6색으로 배경·말풍선·버튼을 다르게 짜요';}
+  {const A=P.arr&&P.arr.sig===JSON.stringify(P.roles)?P.arr:null;$('#arrNote').textContent=A?`배치 ${A.at}/${A.n} · 배경 ${A.k+1}${A.h>=0?` · 상단 ${A.h+1}`:''}${A.r>=0?` · 받은 말풍선 ${A.r+1}`:''} · 내 말풍선 ${A.i+1} · 버튼 ${A.j+1}${A.la!=null?` · 선 ${A.la+1}·${A.lb+1}`:''}번 칸`:'누를 때마다 위 6색으로 배경·상단·두 말풍선·버튼 색을 다르게 짜요 (선 켜기·두께·모양은 지금 설정 그대로)';}
   $('#stripNote').textContent=on?`선은 ${map[0]+1}번째 칸(받은 선)과 ${map[1]+1}번째 칸(내 선)을 써요. 잠근 칸은 다시 추천해도 남습니다.`:'잠근 칸은 다시 추천·섞기를 해도 남아요. 선을 켜면 이 중 두 칸이 선 색이 됩니다.';
   renderLib();
 }
 function renderRecs(){
   const P=S.pal,lab=tagLabel(P.tags);
   $('#recNote').textContent=`기준색 ${P.base} · ${lab||'7가지 무드'}에서 서로 다른 6안을 골랐어요. 모두 글자 대비 AA를 통과했고, 누르면 적용 · 되돌리기로 복귀해요.`;
-  $('#recs').innerHTML=RECS.map((r,i)=>{const E=r.E,[t,line]=recCopy(r),M=MOOD[r.look.mood];
+  $('#recs').innerHTML=RECS.map((r,i)=>{const E=r.E,[t,line]=recCopy(r),M=MOOD[r.look.mood],lw=r.stroke.level==='none'?0:Math.max(.6,r.stroke.width*.6);
     return `<div class="rec" aria-pressed="${i===recPicked}">
     <button class="apply" type="button" data-rec="${i}" aria-label="${M.n} ${t} 적용" title="배경 ${E.bg} · 내 말풍선 ${E.sent} · 강조 ${E.accent}"><span class="mini" style="background:${E.bg}">
       <i class="mh" style="background:${E.header};color:${E.headtext}">Aa 대화방</i>
-      <i class="mb"><i class="bub mr" style="background:${E.recv};color:${E.recvtext}"><b></b><b></b></i><i class="bub ms" style="background:${E.sent};color:${E.senttext}"><b></b></i></i>
+      <i class="mb"><i class="bub mr" style="background:${E.recv};color:${E.recvtext}${lw?`;box-shadow:inset 0 0 0 ${lw}px ${E.recvline}`:''}"><b></b><b></b></i><i class="bub ms" style="background:${E.sent};color:${E.senttext}${lw?`;box-shadow:inset 0 0 0 ${lw}px ${E.sentline}`:''}"><b></b></i></i>
       <i class="mi" style="background:${E.header};color:${E.headtext}"><i class="mbtn" style="background:${E.accent};color:${E.sendicon}">전송</i></i></span>
     <span class="rt">${t}</span><span class="rl">${line}</span>
     <span class="rbadge"><em class="md">${M.n}</em><em>${INT[r.look.int].n}</em><em class="aa">AA</em></span></button>
@@ -1776,9 +1806,11 @@ $('#drawer').addEventListener('keydown',e=>{
 $('#drawer').addEventListener('input',e=>{if(e.target.id!=='dSpread')return;S.grad.parts[DR.part].spread=+e.target.value;liveRefresh();});
 $('#drawer').addEventListener('change',e=>{if(e.target.id==='dSpread')render();});
 $('#drawer').addEventListener('focusin',e=>{if(e.target.id==='dSpread')push();});
-$('#lineLevel').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;push();S.stroke.level=b.dataset.v;delete S.over.recvline;delete S.over.sentline;render();if(pop.part)fillPop();});
+function refreshRecs(){RECS.forEach(r=>{r.stroke={...S.stroke};r.E=buildFrom({pal:r.pal,stroke:r.stroke,over:{},raw:{},mode:r.mode,grad:S.grad}).E;});renderRecs();}
+$('#lineLevel').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;push();S.stroke.level=b.dataset.v;delete S.over.recvline;delete S.over.sentline;render();refreshRecs();if(pop.part)fillPop();});
 $('#s_lineW').addEventListener('pointerdown',push);
 $('#s_lineW').addEventListener('input',e=>{S.stroke.width=+e.target.value;if(S.stroke.level==='none')S.stroke.level='soft';render();});
+$('#s_lineW').addEventListener('change',refreshRecs);
 document.addEventListener('click',e=>{const g=$('#gear');if(g.open&&!e.target.closest('#gear'))g.open=false;});
 $('#modeSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.dataset.v===S.mode)return;push();S.mode=b.dataset.v;
   ['bg','header','recv','sent','accent','headtext','recvtext','senttext','meta','avatar'].forEach(k=>delete S.over[k]);S.raw={};render();
